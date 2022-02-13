@@ -1,0 +1,117 @@
+#25/08/2021
+#Linking raw genomic data files to input folder
+
+
+  938  ls
+  939  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_03/*.gz .
+  940  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_06/*.gz .
+  941  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_08/*.gz .
+  942  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_09/*.gz .
+  943  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_10/*.gz .
+  944  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_12/*.gz .
+  945  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_13/*.gz .
+  946  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_14/*.gz .
+  947  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_15/*.gz .
+  948  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_16/*.gz .
+  949  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_17/*.gz .
+  950  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_18/*.gz .
+  951  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_19/*.gz .
+  952  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_20/*.gz .
+  953  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_21/*.gz .
+  954  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_22/*.gz .
+  955  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_23/*.gz .
+  956  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_25/*.gz .
+  957  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_26/*.gz .
+  958  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_27/*.gz .
+  959  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_28/*.gz .
+  960  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_29/*.gz .
+  979  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_31/*gz .
+  980  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_32/*gz .
+  981  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_33/*gz .
+  982  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_35/*gz .
+  983  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_36/*gz .
+  984  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_38/*gz .
+  985  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_39/*gz .
+  986  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_40/*gz .
+  987  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_41/*gz .
+  988  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_42/*gz .
+  989  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_43/*gz .
+  990  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_44/*gz .
+  991  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_45/*gz .
+  992  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_46/*gz .
+  993  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_47/*gz .
+  994  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_48/*gz .
+  995  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_49/*gz .
+  996  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_50/*gz .
+  997  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_51/*gz .
+  998  ln -s ../../data/X201SC19031072-Z01-F001/raw_data/MU_52/*gz .
+
+
+ 1014  cd ..
+ 1015  ls
+ 1016  cd ..
+ 1017  ls
+ 1018  cd filtering/
+ 1019  ls
+
+$ for file in input/*.gz
+> do
+> echo $file
+
+$ for file in input/*1.fq.gz ; do reverse="$(echo $file |cut -d '_' -f 1-5)"; output="$(echo $file |cut -d '/' -f 2)" ;  fastp -i $file -I "$reverse"_2.fq.gz -o results/"$output"_1.fq.gz -O results/"$output"_2.fq.gz --adapter_sequence AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT --adapter_sequence_r2 GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG --detect_adapter_for_pe -q 20 -u 40 --n_base_limit 15 -l 50 -p --thread 20
+> done
+
+#above had error in it
+#changed to
+
+for file in input/*1.fq.gz;
+do
+reverse="$(echo $file |cut -d '_' -f 1-5)";
+output="$(echo $reverse |cut -d '/' -f 2)" ;
+echo $output;
+fastp -i $file \
+-I "$reverse"_2.fq.gz \
+-o results/"$output"_1.fq.gz \
+-O results/"$output"_2.fq.gz \
+--adapter_sequence AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT \
+--adapter_sequence_r2 GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG \
+--detect_adapter_for_pe \
+-q 20 \
+-u 40 \
+--n_base_limit 15 \
+-l 50 \
+-p \
+--thread 20;
+done
+
+#created .sh doc and submitted to SLURM
+
+#In run_fastq.sh doc:
+#!/bin/sh
+
+#SBATCH --time=06:00:00
+#SBATCH --nodes=1
+#SBATCH -A mulif005c
+#SBATCH -p ProdQ
+
+#for file in input/*1.fq.gz;
+#do
+#reverse="$(echo $file |cut -d '_' -f 1-5)";
+#output="$(echo $reverse |cut -d '/' -f 2)" ;
+#echo $output;
+#fastp -i $file \
+#-I "$reverse"_2.fq.gz \
+#-o results/"$output"_1.fq.gz \
+#-O results/"$output"_2.fq.gz \
+#--adapter_sequence AATGATACGGCGACCACCGAGATCTACACTCTTTCCCTACACGACGCTCTTCCGATCT \
+#--adapter_sequence_r2 GATCGGAAGAGCACACGTCTGAACTCCAGTCACATCACGATCTCGTATGCCGTCTTCTGCTTG \
+#--detect_adapter_for_pe \
+#-q 20 \
+#-u 40 \
+#--n_base_limit 15 \
+#-l 50 \
+#-p \
+#--thread 20;
+#done
+
+sbatch run_fastp.sh
