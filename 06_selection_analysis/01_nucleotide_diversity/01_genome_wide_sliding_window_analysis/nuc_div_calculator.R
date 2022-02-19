@@ -20,12 +20,32 @@
 ##
 ##########################################################################################
 
-input <- "chromosome_info.txt"
+## Take arguments from the command line:
+args = commandArgs(trailingOnly=TRUE)
+
+# test if there is at least one argument: if not, return an error
+#if (length(args)==0) {
+#  stop("At least one argument must be supplied (input file).n", call.=FALSE)
+#} else if (length(args)==1) {
+#  # default output file
+#  args[3] = "out.txt"
+#}
+
+## Assign 'chromosome_info.txt' to input:
+input <- args[1]
+print(input)
+
+## Assign reference gff to input_gff:
+input_gff <- args[2]
+print(input_gff)
+
+## Assign third argument to output
+output <- args[3]
+print(output)
+
+## Manually set bin width (e.g. size of sliding window):
 bin_width <- 100000
-input_gff <- "../gff/Bombus_terrestris.Bter_1.0.45.gff"
-output <- "bter_hib_all_chrom_100kb.txt"
-pop1 <- scan(file = "../populations/irish_samples.txt", as.character())
-pop2 <- scan(file = "../populations/non_irish_samples.txt", as.character())
+jump_width <- bin_width / 2
 
 # Load libraries; install from scratch if needed
 libraries <- c("ggplot2",
@@ -42,8 +62,6 @@ for (lib in libraries) {
 }
 
 options(scipen=999)
-
-#install.packages("WhopGenome")
 
 ## Load data
 ## Read in the tabix indexed VCF
@@ -63,31 +81,36 @@ chrom_data <- as.matrix(chrom_data)
 ##
 count <- 0
 nucdiv_combined_df <- data.frame()
-fst_estimates_df <- data.frame()
 
-## Define jumpwidth:
-jump_width <- as.numeric(bin_width)/2
-print(jump_width)
 print(chrom_data)
 
 ## For loop, cycle through each chromosomes and calculate nucleotide diverity within
 ## genomic windows of user-defined size:
 for (item in 1:nrow(chrom_data)){
         ## Extract name of chromosome:
-        chrom <- gsub(".recode.vcf.bgz", "", chrom_data[item,][1])
+        chrom <- gsub(".recode.vcf.bgz",
+                      "",
+                      chrom_data[item,][1])
+        chrom <- gsub("variant_files/",
+                      "",
+                      chrom)
         ## Read in VCF file:
-        chrom_data_item <- readVCF(chrom_data[item,][1], bin_width, chrom, chrom_data[item,][2], chrom_data[item,][3], gffpath = input_gff, approx = TRUE,  include.unknown=TRUE)
+        chrom_data_item <- readVCF(chrom_data[item,][1],
+                                   bin_width,
+                                   chrom,
+                                   chrom_data[item,][2],
+                                   chrom_data[item,][3],
+                                   gffpath = input_gff,
+                                   approx = FALSE,
+                                   include.unknown = TRUE)
         ## Create sliding windows:
         chrom_data_item      <- sliding.window.transform(chrom_data_item, bin_width, jump_width, type=2, whole.data = TRUE)
         ## Extract region names, which contains window coordinates:
         region_names         <- chrom_data_item@region.names
         print(region_names)
         print(str_split_fixed(region_names, " ", 4)[, 1-3])
-        #region_names_df      <- str_split_fixed(region_names, " ", 4)[,4]
         region_names_df      <- str_split_fixed(region_names, " ", 4)[, 1-3]
         region_names_df       <- region_names_df[, 1:2]
-	#region_names_df      <- gsub(" :", "", region_names_df)
-        #region_names_df      <- str_split_fixed(region_names_df, " - ", 2)
         print(head(region_names_df))
         ## Calculation of neutrality statistics:
         chrom_data_item      <- neutrality.stats(chrom_data_item)
@@ -104,17 +127,12 @@ for (item in 1:nrow(chrom_data)){
         nucdiv_item.df$seg_sites <- chrom_data_item@n.segregating.sites
         ## Combine nucleotide diversity statistics across windows:
         nucdiv_combined_df <- rbind(nucdiv_combined_df, nucdiv_item.df)
-        ## Set populations
-        chrom_data_item <- set.populations(chrom_data_item, list(pop1, pop2))
-        # Diversities and FST (by scaffold)
-        chrom_data_item <- F_ST.stats(chrom_data_item) # this does the calculations and 
-                       # adds the results to the appropriate slots
-
-# Print FST
-fst_estimates <- as.data.frame(get.F_ST(chrom_data_item)) # each line is a scaffold
-fst_estimates_df <- rbind(fst_estimates_df, fst_estimates)
-chrom_data_item@nucleotide.F_ST
 }
+
+print(str(nucdiv_combined_df))
+
+## Rearrange order:
+nucdiv_combined_df <- nucdiv_combined_df[c(4,2,3,1,5,6)]
 
 ## Rename columns:
 colnames(nucdiv_combined_df) <- c("nuc_diversity",
@@ -125,9 +143,6 @@ colnames(nucdiv_combined_df) <- c("nuc_diversity",
                                   "seg_sites")
 
 print(head(nucdiv_combined_df))
-
-## Rearrange order:
-nucdiv_combined_df <- nucdiv_combined_df[c(4,2,3,1,5,6)]
 
 ## Calcule median nucletide diversity
 nucdiv_median <- median(as.numeric(as.character(nucdiv_combined_df$nuc_diversity)))
@@ -149,9 +164,9 @@ quote = FALSE,
 sep="\t")
 
 ## Export table:
-write.table(fst_estimates_df,
-"./fst_estimates.txt",
-row.names = FALSE,
-col.names = TRUE,
-quote = FALSE,
-sep="\t")
+#write.table(fst_estimates_df,
+#"./fst_estimates.txt",
+#row.names = FALSE,
+#col.names = TRUE,
+#quote = FALSE,
+#sep="\t")
