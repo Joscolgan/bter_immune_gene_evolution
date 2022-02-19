@@ -22,10 +22,8 @@
 
 input <- "chromosome_info.txt"
 bin_width <- 10000
-input_gff <- "./gff/Bombus_terrestris.Bter_1.0.52.gff3"
+input_gff <- "./gff/Bombus_terrestris.Bter_1.0.51.gff3"
 output <- "../results/theta_estimates_per_gene.txt"
-#pop1 <- scan(file = "./data/sample_list_female.txt", as.character())
-#pop2 <- scan(file = "./data/sample_list_male.txt", as.character())
 
 # Load libraries; install from scratch if needed
 libraries <- c("ggplot2",
@@ -139,17 +137,6 @@ for (item in 1:nrow(chrom_data)){
 
 print("Complete")
 dim(nucdiv_combined_df)
-
-## Rename columns:
-#colnames(nucdiv_combined_df) <- c("raw_nuc_diversity",
-#                                  "start",
-#                                  "end",
-#                                  "chrom",
-#                                  "tajima_d",
-#                                  #"fst",
-#                                  "seg_sites",
-#                                  "gene_length",
-#                                  "corrected_nuc_div")
 
 print(head(nucdiv_combined_df))
 
