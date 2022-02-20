@@ -67,7 +67,7 @@ print(output)
 
 ## Read in input file:
 data <- read.table(file = input,
-                   header = TRUE)
+                   header = FALSE)
 print(head(data))
 print(str(data))
 
@@ -106,12 +106,9 @@ print(head(data$td_pvalue2sided))
 ## Turn off scientific notation:
 options(scipen = 999)
 
-## write to output
+## write estimates for all windows to output:
 write.table(x = data,
-            file = paste("./results/",
-                         output,
-                         "zscore_normalised.txt",
-                         sep = ""),
+            file = output,
             row.names = FALSE,
             col.names = TRUE,
             quote = FALSE,
@@ -124,17 +121,45 @@ write.table(x = data,
 ## Subset significant terms:
 data_nd_sig <- subset(data,
                       nd_pvalue2sided < 0.05)
-data_td_sig <- subset(data,
-                      tajima_d < 0 &
-                      td_pvalue2sided < 0.05)
-## Regions with low diversity and low Tajima's D:
-nrow(subset(data,
-       nd_pvalue2sided < 0.05 &
-                tajima_d < 0 &
-               td_pvalue2sided < 0.05))
+write.table(x = data_nd_sig,
+            file = paste(output,
+                        "_all_sig.txt",
+                        sep = ""),
+            row.names = FALSE,
+            col.names = TRUE,
+            quote = FALSE,
+            sep = "\t")
+
+
+
+## Subset significant terms with high zscores:
+data_nd_high_sig <- subset(data,
+                      nd_pvalue2sided < 0.05 &
+                      nd_zscores > 0)
+write.table(x = data_nd_high_sig,
+            file = paste(output,
+                        "_all_sig_high.txt",
+                        sep = ""),
+            row.names = FALSE,
+            col.names = TRUE,
+            quote = FALSE,
+            sep = "\t")
+
+## Subset significant terms with low zscores:
+data_nd_low_sig <- subset(data,
+                      nd_pvalue2sided < 0.05 &
+                      nd_zscores < 0)
+write.table(x = data_nd_low_sig,
+            file = paste(output,
+                        "_all_sig_low.txt",
+                        sep = ""),
+            row.names = FALSE,
+            col.names = TRUE,
+            quote = FALSE,
+            sep = "\t")
 
 ## Save output:
-save(data, file = paste("./results/",
-                        output,
-                        "zscore_normalised.Rdata",
-                        sep = ""))
+#save(data, file = paste("./results/",
+#                        output,
+#                        "zscore_normalised.Rdata",
+#                        sep = ""))
