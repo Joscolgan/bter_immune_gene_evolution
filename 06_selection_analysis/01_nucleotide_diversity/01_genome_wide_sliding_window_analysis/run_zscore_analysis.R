@@ -1,9 +1,9 @@
 #!/usr/bin/env Rscript
 ##########################################################################################
 ##
-## Author: Joe Colgan                           Program: theta_estimator.R
+## Author: Joe Colgan                           Program: run_zscore_analysis.R
 ##
-## Date: 23-03-2020
+## Date: 20-02-2022
 ##
 ## Purpose:
 ##  - Read in text file containing information of VCF file for each chromosome, as well
@@ -27,33 +27,8 @@
 # The script outputs a table containing these p-values with each row representative of a 100kb sliding window.  
 # The script also saves and outputs the entire analysis as an R object.
 
-# 1. Load libraries:
-
-## Load libraries:
-libraries <- c("lintr",
-               "ggplot2",
-               "ggpubr")
-for (lib in libraries) {
-        if (require(package = lib, character.only = TRUE)) {
-                print("Successful")
-        } else {
-                print("Installing")
-                source("https://bioconductor.org/biocLite.R")
-                biocLite(pkgs = lib)
-                library(lib, character.only = TRUE)
-        }
-}
-
 ## Take arguments from the command line:
 args = commandArgs(trailingOnly=TRUE)
-
-# test if there is at least one argument: if not, return an error
-#if (length(args)==0) {
-#  stop("At least one argument must be supplied (input file).n", call.=FALSE)
-#} else if (length(args)==1) {
-#  # default output file
-#  args[3] = "out.txt"
-#}
 
 ## Assign 'chromosome_info.txt' to input:
 input <- args[1]
@@ -157,9 +132,3 @@ write.table(x = data_nd_low_sig,
             col.names = TRUE,
             quote = FALSE,
             sep = "\t")
-
-## Save output:
-#save(data, file = paste("./results/",
-#                        output,
-#                        "zscore_normalised.Rdata",
-#                        sep = ""))
