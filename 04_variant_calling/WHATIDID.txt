@@ -1,0 +1,16 @@
+## Preparation of files for variant calling using freebayes:
+## Make the following directories:
+mkdir variant_calling
+cd variant_calling
+
+## Create subdirectories:
+mkdir input
+mkdir data
+mkdir results
+mkdir src
+
+## Install freebayes:
+cd src
+wget https://github.com/freebayes/freebayes/releases/download/v1.3.5/freebayes-1.3.5-src.tar.gz
+tar -xzvf freebayes-1.3.5-src.tar.gz
+cd ../
