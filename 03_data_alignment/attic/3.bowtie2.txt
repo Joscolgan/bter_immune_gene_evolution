@@ -1,0 +1,67 @@
+#############################################################################################
+#############################################################################################
+## Author: Joe Colgan, Sarah Larragy			Program: bowtie2.sh
+##
+## Date: 28/06/22
+##
+#############################################################################################
+
+## Alignment with Bowtie2
+
+##Make the following directories:
+
+mkdir alignment 
+cd alignment
+mkdir data
+mkdir input
+mkdir results
+mkdir src
+
+
+## Download genome to data directory & build :
+
+wget http://ftp.ebi.ac.uk/ensemblgenomes/pub/release-51/metazoa/fasta/bombus_terrestris/dna/Bombus_terrestris.Bter_1.0.dna.toplevel.fa.gz
+
+gunzip Bombus_terrestris.Bter_1.0.dna.toplevel.fa.gz
+
+srun -p DevQ -N 1 -A mulif005c -t 1:00:00 --pty bash
+
+bowtie2-build data/genome/Bombus_terrestris.Bter_1.0.dna.toplevel.
+
+
+## Link filtered genomes from /filtering/results to input directory :
+
+ln -s ../../filtering/results/MU_*.gz .
+
+
+## In alignment directory, create shell script to run bowtie2 on all filtered genomes:
+
+nano run_bowtie2.sh		##Enter the following:
+
+#!/bin/sh
+
+#SBATCH --time=06:00:00
+#SBATCH --nodes=1
+#SBATCH -A mulif005c
+#SBATCH -p ProdQ
+
+for file in input/*1.fq.gz;
+do
+reverse="$(echo "$file" |cut -d '_' -f 1-5)_2.fq.gz";
+output="$(echo "$reverse" |cut -d '/' -f 2 | cut -d '_' -f 1-5)";
+echo "$output";
+bowtie2 --rg-id "$output" \
+--rg SM:"$output" \
+--rg LB:library1 \
+--rg PL:ILLUMINA \
+--rg DS:HiSeq2500 \
+--local -p 40 \
+-X 1000 -x data/genome/bterr_1.0 \
+-1 <(zcat "$file") \
+-2 <(zcat "$reverse") | \
+samtools view -bS | samtools sort -o results/"$output".bam -;
+done
+
+## Submit script to slurm:
+
+sbatch run_bowtie2.sh
