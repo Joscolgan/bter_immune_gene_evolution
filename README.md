@@ -2,8 +2,8 @@
 
 This repository contains all scripts used for the population genomic analysis of immune genes in a contemporary population of _Bombus terrestris_ males sampled across Ireland. This project was supported by a Department of Agriculture, Food, and the Marine Conservation of Genetic Resources grant. Findings are reported in the following manuscript: 
 
-Larragy, S.J., Möllmann, J.S., Stout, J., Carolan, J.C., Colgan, T.J.  
-
+__Larragy, S.J., Möllmann, J.S., Stout, J., Carolan, J.C., Colgan, T.J.__. 
+Signatures of adaptation, constraints, and potential redundancy in the canonical immune genes of a key pollinator. _In review at GBE__
 
 ## License
 
