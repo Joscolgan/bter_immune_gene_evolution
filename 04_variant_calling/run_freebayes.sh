@@ -15,7 +15,7 @@ ref="data/Bombus_terrestris.Bter_1.0.dna.toplevel.fa"
 src/freebayes/scripts/freebayes-parallel \
 region_list.txt 40 \
 -f "$ref" \
---bam-list irish_bam_list.txt \
+--bam-list bam_list.txt \
 --ploidy 2 \
 --report-genotype-likelihood-max \
 --use-mapping-quality \
@@ -26,4 +26,4 @@ region_list.txt 40 \
 --min-mapping-quality 1 \
 --min-alternate-frac 0.25 \
 --min-coverage 1 \
---use-reference-allele > results/irish_samples.vcf
+--use-reference-allele > results/raw_samples.vcf
