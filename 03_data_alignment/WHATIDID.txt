@@ -21,3 +21,6 @@ srun -p DevQ -N 1 -A mulif005c -t 1:00:00 --pty bash
 
 ## Build index:
 bowtie2-build data/genome/bter_1.0 data/Bombus_terrestris.Bter_1.0.dna.toplevel.fa
+
+## Run bowtie2 alignments:
+sbatch run_bowtie2.sh
