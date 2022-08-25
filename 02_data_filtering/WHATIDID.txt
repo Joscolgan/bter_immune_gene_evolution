@@ -1,0 +1,29 @@
+## Filtering with FastP
+
+## Make filtering directory and directories within:
+mkdir filtering
+cd filtering
+
+## Create project subdirectories:
+mkdir input
+mkdir results
+mkdir src
+mkdir data
+
+## Install fastp into /src:
+cd src
+git clone https://github.com/OpenGene/fastp.git
+cd ../bin
+ln -s ../src/fastp .
+cd ../
+
+## Link all raw compressed FastQC files to input folder:
+cd input
+ln -s ../../data/X201SC19031072-Z01-F001/raw_data/*/*.gz .
+cd ..
+
+## Run script for filtering with fastp:
+## Submit script to slurm:
+sbatch run_fastp.sh
+
+
