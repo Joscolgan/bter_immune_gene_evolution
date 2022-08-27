@@ -5,7 +5,7 @@
 #SBATCH -A mulif005c
 #SBATCH -p ProdQ
 
-for name in bed_files/B12*bed;
+for name in bed_files/B*bed;
 do
 bam_file="$(echo "$name" | cut -d '.' -f 1 )";
 echo "$bam_file";

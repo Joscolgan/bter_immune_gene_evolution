@@ -14,10 +14,6 @@ results_dtol/MU_08_FDPL190630205-1a_HJL3TDSXX_L1_dtol_alignment.sorted,\
 results_dtol/MU_09_FDPL190630206-1a_HJL3TDSXX_L1_dtol_alignment.sorted,\
 results_dtol/MU_10_FDPL190630207-1a_HJL3TDSXX_L1_dtol_alignment.sorted,\
 results_dtol/MU_12_FDPL190630209-1a_HJL3TDSXX_L1_dtol_alignment.sorted,\
-results_dtol/MU_13_FDPL190630210-1a_HHYHCDSXX_L1_dtol_alignment.sorted,\
-results_dtol/MU_14_FDPL190630211-1a_HHYHCDSXX_L1_dtol_alignment.sorted,\
-results_dtol/MU_15_FDPL190630212-1a_HHYHCDSXX_L1_dtol_alignment.sorted,\
-results_dtol/MU_16_FDPL190630213-1a_HHYHCDSXX_L1_dtol_alignment.sorted,\
 results_dtol/MU_17_FDPL190630214-1a_HHYHCDSXX_L1_dtol_alignment.sorted,\
 results_dtol/MU_18_FDPL190630215-1a_HHYHCDSXX_L1_dtol_alignment.sorted,\
 results_dtol/MU_19_FDPL190630216-1a_HJL3TDSXX_L1_dtol_alignment.sorted,\
@@ -30,7 +26,6 @@ results_dtol/MU_26_FDPL190630223-1a_HJL3TDSXX_L1_dtol_alignment.sorted,\
 results_dtol/MU_27_FDPL190630224-1a_HJL3TDSXX_L1_dtol_alignment.sorted,\
 results_dtol/MU_28_FDPL190630225-1a_HJL3TDSXX_L2_dtol_alignment.sorted,\
 results_dtol/MU_29_FDPL190630226-1a_HJL3TDSXX_L2_dtol_alignment.sorted,\
-results_dtol/MU_31_FDPL190630228-1a_HJL3TDSXX_L1_dtol_alignment.sorted,\
 results_dtol/MU_32_FDPL190630229-1a_HJL3TDSXX_L1_dtol_alignment.sorted,\
 results_dtol/MU_33_FDPL190630230-1a_HJL3TDSXX_L1_dtol_alignment.sorted,\
 results_dtol/MU_35_FDPL190630231-1a_HJL3TDSXX_L1_dtol_alignment.sorted,\
@@ -43,13 +38,7 @@ results_dtol/MU_42_FDPL190630237-1a_HJL3TDSXX_L2_dtol_alignment.sorted,\
 results_dtol/MU_43_FDPL190630238-1a_HJL3TDSXX_L1_dtol_alignment.sorted,\
 results_dtol/MU_44_FDPL190630239-1a_HJL3TDSXX_L1_dtol_alignment.sorted,\
 results_dtol/MU_45_FDPL190630240-1a_HJL3TDSXX_L1_dtol_alignment.sorted,\
-results_dtol/MU_46_FDPL190630241-1a_HL272DSXX_L1_dtol_alignment.sorted,\
-results_dtol/MU_47_FDPL190643610-1a_HL272DSXX_L2_dtol_alignment.sorted,\
-results_dtol/MU_48_FDPL190643611-1a_HKYH5DSXX_L2_dtol_alignment.sorted,\
-results_dtol/MU_49_FDPL190643612-1a_HL272DSXX_L1_dtol_alignment.sorted,\
-results_dtol/MU_50_FDPL190643613-1a_HL272DSXX_L1_dtol_alignment.sorted,\
-results_dtol/MU_51_FDPL190643614-1a_HL272DSXX_L2_dtol_alignment.sorted,\
-results_dtol/MU_52_FDPL190643615-1a_HKYH5DSXX_L2_dtol_alignment.sorted \
+results_dtol/MU_46_FDPL190630241-1a_HL272DSXX_L1_dtol_alignment.sorted \
 -D \
 results_dtol/MU_01_FDPL190630198-1a_HJL3TDSXX_L1_dtol_alignment.discordants,\
 results_dtol/MU_03_FDPL190630200-1a_HJL3TDSXX_L1_dtol_alignment.discordants,\
@@ -59,10 +48,6 @@ results_dtol/MU_08_FDPL190630205-1a_HJL3TDSXX_L1_dtol_alignment.discordants,\
 results_dtol/MU_09_FDPL190630206-1a_HJL3TDSXX_L1_dtol_alignment.discordants,\
 results_dtol/MU_10_FDPL190630207-1a_HJL3TDSXX_L1_dtol_alignment.discordants,\
 results_dtol/MU_12_FDPL190630209-1a_HJL3TDSXX_L1_dtol_alignment.discordants,\
-results_dtol/MU_13_FDPL190630210-1a_HHYHCDSXX_L1_dtol_alignment.discordants,\
-results_dtol/MU_14_FDPL190630211-1a_HHYHCDSXX_L1_dtol_alignment.discordants,\
-results_dtol/MU_15_FDPL190630212-1a_HHYHCDSXX_L1_dtol_alignment.discordants,\
-results_dtol/MU_16_FDPL190630213-1a_HHYHCDSXX_L1_dtol_alignment.discordants,\
 results_dtol/MU_17_FDPL190630214-1a_HHYHCDSXX_L1_dtol_alignment.discordants,\
 results_dtol/MU_18_FDPL190630215-1a_HHYHCDSXX_L1_dtol_alignment.discordants,\
 results_dtol/MU_19_FDPL190630216-1a_HJL3TDSXX_L1_dtol_alignment.discordants,\
@@ -75,7 +60,6 @@ results_dtol/MU_26_FDPL190630223-1a_HJL3TDSXX_L1_dtol_alignment.discordants,\
 results_dtol/MU_27_FDPL190630224-1a_HJL3TDSXX_L1_dtol_alignment.discordants,\
 results_dtol/MU_28_FDPL190630225-1a_HJL3TDSXX_L2_dtol_alignment.discordants,\
 results_dtol/MU_29_FDPL190630226-1a_HJL3TDSXX_L2_dtol_alignment.discordants,\
-results_dtol/MU_31_FDPL190630228-1a_HJL3TDSXX_L1_dtol_alignment.discordants,\
 results_dtol/MU_32_FDPL190630229-1a_HJL3TDSXX_L1_dtol_alignment.discordants,\
 results_dtol/MU_33_FDPL190630230-1a_HJL3TDSXX_L1_dtol_alignment.discordants,\
 results_dtol/MU_35_FDPL190630231-1a_HJL3TDSXX_L1_dtol_alignment.discordants,\
@@ -88,13 +72,7 @@ results_dtol/MU_42_FDPL190630237-1a_HJL3TDSXX_L2_dtol_alignment.discordants,\
 results_dtol/MU_43_FDPL190630238-1a_HJL3TDSXX_L1_dtol_alignment.discordants,\
 results_dtol/MU_44_FDPL190630239-1a_HJL3TDSXX_L1_dtol_alignment.discordants,\
 results_dtol/MU_45_FDPL190630240-1a_HJL3TDSXX_L1_dtol_alignment.discordants,\
-results_dtol/MU_46_FDPL190630241-1a_HL272DSXX_L1_dtol_alignment.discordants,\
-results_dtol/MU_47_FDPL190643610-1a_HL272DSXX_L2_dtol_alignment.discordants,\
-results_dtol/MU_48_FDPL190643611-1a_HKYH5DSXX_L2_dtol_alignment.discordants,\
-results_dtol/MU_49_FDPL190643612-1a_HL272DSXX_L1_dtol_alignment.discordants,\
-results_dtol/MU_50_FDPL190643613-1a_HL272DSXX_L1_dtol_alignment.discordants,\
-results_dtol/MU_51_FDPL190643614-1a_HL272DSXX_L2_dtol_alignment.discordants,\
-results_dtol/MU_52_FDPL190643615-1a_HKYH5DSXX_L2_dtol_alignment.discordants \
+results_dtol/MU_46_FDPL190630241-1a_HL272DSXX_L1_dtol_alignment.discordants \
 -S \
 results_dtol/MU_01_FDPL190630198-1a_HJL3TDSXX_L1_dtol_alignment.splitters,\
 results_dtol/MU_03_FDPL190630200-1a_HJL3TDSXX_L1_dtol_alignment.splitters,\
@@ -104,10 +82,6 @@ results_dtol/MU_08_FDPL190630205-1a_HJL3TDSXX_L1_dtol_alignment.splitters,\
 results_dtol/MU_09_FDPL190630206-1a_HJL3TDSXX_L1_dtol_alignment.splitters,\
 results_dtol/MU_10_FDPL190630207-1a_HJL3TDSXX_L1_dtol_alignment.splitters,\
 results_dtol/MU_12_FDPL190630209-1a_HJL3TDSXX_L1_dtol_alignment.splitters,\
-results_dtol/MU_13_FDPL190630210-1a_HHYHCDSXX_L1_dtol_alignment.splitters,\
-results_dtol/MU_14_FDPL190630211-1a_HHYHCDSXX_L1_dtol_alignment.splitters,\
-results_dtol/MU_15_FDPL190630212-1a_HHYHCDSXX_L1_dtol_alignment.splitters,\
-results_dtol/MU_16_FDPL190630213-1a_HHYHCDSXX_L1_dtol_alignment.splitters,\
 results_dtol/MU_17_FDPL190630214-1a_HHYHCDSXX_L1_dtol_alignment.splitters,\
 results_dtol/MU_18_FDPL190630215-1a_HHYHCDSXX_L1_dtol_alignment.splitters,\
 results_dtol/MU_19_FDPL190630216-1a_HJL3TDSXX_L1_dtol_alignment.splitters,\
@@ -120,7 +94,6 @@ results_dtol/MU_26_FDPL190630223-1a_HJL3TDSXX_L1_dtol_alignment.splitters,\
 results_dtol/MU_27_FDPL190630224-1a_HJL3TDSXX_L1_dtol_alignment.splitters,\
 results_dtol/MU_28_FDPL190630225-1a_HJL3TDSXX_L2_dtol_alignment.splitters,\
 results_dtol/MU_29_FDPL190630226-1a_HJL3TDSXX_L2_dtol_alignment.splitters,\
-results_dtol/MU_31_FDPL190630228-1a_HJL3TDSXX_L1_dtol_alignment.splitters,\
 results_dtol/MU_32_FDPL190630229-1a_HJL3TDSXX_L1_dtol_alignment.splitters,\
 results_dtol/MU_33_FDPL190630230-1a_HJL3TDSXX_L1_dtol_alignment.splitters,\
 results_dtol/MU_35_FDPL190630231-1a_HJL3TDSXX_L1_dtol_alignment.splitters,\
@@ -133,13 +106,6 @@ results_dtol/MU_42_FDPL190630237-1a_HJL3TDSXX_L2_dtol_alignment.splitters,\
 results_dtol/MU_43_FDPL190630238-1a_HJL3TDSXX_L1_dtol_alignment.splitters,\
 results_dtol/MU_44_FDPL190630239-1a_HJL3TDSXX_L1_dtol_alignment.splitters,\
 results_dtol/MU_45_FDPL190630240-1a_HJL3TDSXX_L1_dtol_alignment.splitters,\
-results_dtol/MU_46_FDPL190630241-1a_HL272DSXX_L1_dtol_alignment.splitters,\
-results_dtol/MU_47_FDPL190643610-1a_HL272DSXX_L2_dtol_alignment.splitters,\
-results_dtol/MU_48_FDPL190643611-1a_HKYH5DSXX_L2_dtol_alignment.splitters,\
-results_dtol/MU_49_FDPL190643612-1a_HL272DSXX_L1_dtol_alignment.splitters,\
-results_dtol/MU_50_FDPL190643613-1a_HL272DSXX_L1_dtol_alignment.splitters,\
-results_dtol/MU_51_FDPL190643614-1a_HL272DSXX_L2_dtol_alignment.splitters,\
-results_dtol/MU_52_FDPL190643615-1a_HKYH5DSXX_L2_dtol_alignment.splitters \
--o test_dtol.vcf \
+results_dtol/MU_46_FDPL190630241-1a_HL272DSXX_L1_dtol_alignment.splitters \
+-o test_dtol_irish.vcf \
 -P
-
