@@ -98,6 +98,8 @@ samples_of_interest <- scan(file = "data/irish_samples.txt",
                             as.character())
 
 ## Subset irish samples:
+duplications_raw <- duplications[, samples_of_interest] 
+
 duplications_norm <- duplications_norm[, samples_of_interest]
 ```
 
@@ -438,6 +440,11 @@ high_read_depth_sites_raw <- subset(combined_counts,
                                     rownames(combined_counts) %in% high_read_depth_sites_vector)
 high_read_depth_sites_raw$status <- NULL
 
+high_read_depth_sites_raw <- subset(high_read_depth_sites_raw,
+       row.names(high_read_depth_sites_raw) %in% high_read_counts_table_df$Var1)
+
+high_read_depth_sites_raw <- high_read_depth_sites_raw[, samples_of_interest]
+
 ## Write to file:
 write.table(x = high_read_depth_sites_raw,
             file = "results/conserved_highRD_sites_dups_raw_counts.txt",
@@ -452,6 +459,11 @@ combined_counts_normalized$`rownames(combined_counts_normalized)` <- NULL
 high_read_depth_sites_norm <- subset(combined_counts_normalized,
                                    rownames(combined_counts_normalized) %in% high_read_depth_sites_vector)
 high_read_depth_sites_df$status <- NULL
+
+high_read_depth_sites_norm <- subset(high_read_depth_sites_norm,
+       row.names(high_read_depth_sites_norm) %in% high_read_counts_table_df$Var1)
+
+high_read_depth_sites_norm$status <- NULL
 
 write.table(x = high_read_depth_sites_norm,
             file = "results/conserved_highRD_sites_dups_norm_counts.txt",
