@@ -115,6 +115,10 @@ combined_immune_df <- rbind(immune_genes_df,
 ## Turn off scientific notation for plots:
 options(scipen = 999)
 
+## Examine differences in |nsl| scores between immune and non-immune genes:
+wilcox.test(immune_genes_df$nsl,
+            non_immune_genes_df$nsl)
+
 ## Visualise using box-plots and/or violin plots:
 ## Plot status against absolute nSL score:
 nsl_comp_plot  <- ggplot(data = combined_immune_df,
