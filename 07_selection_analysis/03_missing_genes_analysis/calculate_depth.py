@@ -45,7 +45,7 @@ from helper_functions import *
 ##############################################################################
 # To run calculate_depth.py:
 #  1. Download and install the following software:
-#   lumpy
+#   samtools
 #   bedtools
 #
 #  2. Ensure helper_functions.py is within the same directory of the Snakefile.
@@ -72,8 +72,8 @@ from helper_functions import *
 ##############################################################################
 # Assign global variables for use in rules (see below)
 ##############################################################################
-# Assign name for list of paths for files containing putative duplications
-DUPLICATION_LIST = "bed_files.txt"
+# Assign name for list of paths for files containing putative missing sites.
+MISSING_LIST = "bed_files.txt"
 
 ##############################################################################
 # Assignment of wildcards to be used within rules
@@ -84,11 +84,11 @@ with open('samples_list.txt') as samples:
     SAMPLES = [samples.rstrip('\n') for samples in content]
     print(SAMPLES)
 
-# Read in the content of the duplication list - one duplication per line
-with open('bed_files.txt') as duplications:
-    dup_content = duplications.readlines()
-    DUPLICATIONS = [duplications.rstrip('\n') for duplications in dup_content]
-    print(DUPLICATIONS)
+# Read in the content of the missing sites - one site per line
+with open('bed_files.txt') as missing_site:
+    site_content = missing_site.readlines()
+    MISSING_SITES = [missing_site.rstrip('\n') for missing_site in site_content]
+    print(MISSING_SITES)
 
 ##############################################################################
 # Specify all input/output files in terms of sample wildcards
@@ -96,23 +96,23 @@ with open('bed_files.txt') as duplications:
 # Assign path for input alignment BAM files.
 ALIGNED_DATA            = "input/{samples}_RG_updated.bam"
 
-# Assign path for BED files containing CNV information.
-DUPLICATED_DATA         = "bed_files/{duplications}.bed"
+# Assign path for BED files containing missing site information.
+MISSING_DATA         = "bed_files/{missing_site}.bed"
 
 # Output intersected BAM files here.
-INTERSECTED_DATA        = "results/01_intersect_bam/{duplications}.{samples}.bam"
+INTERSECTED_DATA        = "results/01_intersect_bam/{missing_site}.{samples}.bam"
 
 # Output depth counts here.
-DEPTH_DATA              = "results/02_depth_bam/{duplications}.{samples}.depth.txt"
+DEPTH_DATA              = "results/02_depth_bam/{missing_site}.{samples}.depth.txt"
 
-# Output mean counts per sample here.
-CALCULATED_MEDIAN_DATA  = "results/03_median_counts/{duplications}.{samples}.median_depth.txt"
+# Output median counts per sample here.
+CALCULATED_MEDIAN_DATA  = "results/03_median_counts/{missing_site}.{samples}.median_depth.txt"
 
-# Output combined mean data here.
-COMBINED_MEDIAN_DATA    = "results/04_combined_counts/{duplications}.combined.median_depth.txt"
+# Output combined median data here.
+COMBINED_MEDIAN_DATA    = "results/04_combined_counts/{missing_site}.combined.median_depth.txt"
 
-# Output combined CNV mean data here.
-COMBINED_CNV_DATA       = "results/05_combined_CNV_means/combined.median_depth.all_CNVs.txt"
+# Output combined median data from all samples here.
+COMBINED_ALL_DATA       = "results/05_combined_depth_medians/combined.median_depth.all_missing_sites.txt"
 
 # Output final data file here.
 FINAL_DATA              = "results/06_final/final_combined.median_depth.all_dups.txt"
@@ -142,9 +142,9 @@ rule all:
     input: expand(FINAL_DATA)
 
 # Each rule will specify an intermediate step
-# Intersect BAM file using BED files populated with CNV genomic co-ordinates
+# Intersect BAM file using BED files populated with missing sites genomic co-ordinates
 rule intersect_bam:
-    input:  ALIGNED_DATA, DUPLICATED_DATA
+    input:  ALIGNED_DATA, MISSING_DATA
     output: INTERSECTED_DATA
     run:
         check_files_arent_empty(input)
@@ -158,7 +158,7 @@ rule count_depth:
         check_files_arent_empty(input)
         shell("{tools[samtools]} depth {input} > {output} && [[ -s {output} ]]")
 
-# Calculate the median of aligned reads for each putative CNV.
+# Calculate the median of aligned reads for each putative missing site.
 rule calculate_median:
     input:  DEPTH_DATA
     output: CALCULATED_MEDIAN_DATA
@@ -166,26 +166,26 @@ rule calculate_median:
         check_files_arent_empty(input)
         shell("Rscript median_counter.R {input} {output} && [[ -s {output} ]]")
 
-# Paste the means for each sample per row
-rule paste_means:
-    input:  expand("results/03_median_counts/{{duplications}}.{samples}.median_depth.txt", samples = SAMPLES)
+# Paste the medians for each sample per row.
+rule paste_medians:
+    input:  expand("results/03_median_counts/{{missing_site}}.{samples}.median_depth.txt", samples = SAMPLES)
     output: COMBINED_MEDIAN_DATA
     run:
         check_files_arent_empty(input)
         shell("paste {input} > {output} && [[ -s {output} ]]")
 
-# Combine the CNV mean rows
-rule combine_CNVs:
-    input:  expand("results/04_combined_counts/{duplications}.combined.median_depth.txt", duplications = DUPLICATIONS)
-    output: COMBINED_CNV_DATA
+# Combine all missing site median rows.
+rule combine_sites:
+    input:  expand("results/04_combined_counts/{missing_site}.combined.median_depth.txt", missing_site = MISSING_SITE)
+    output: COMBINED_ALL_DATA
     run:
         check_files_arent_empty(input)
         shell("cat {input} > {output} && [[ -s {output} ]]")
 
-# Combine counts with mean row name
-rule add_CNV_names:
-    input:  COMBINED_CNV_DATA
+# Combine counts with median row name.
+rule add_site_names:
+    input:  COMBINED_ALL_DATA
     output: FINAL_DATA
     run:
         check_files_arent_empty(input)
-        shell("paste {DUPLICATION_LIST} {input} > {output} && [[ -s {output} ]]")
+        shell("paste {MISSING_LIST} {input} > {output} && [[ -s {output} ]]")
