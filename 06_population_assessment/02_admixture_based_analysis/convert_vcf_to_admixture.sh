@@ -6,7 +6,8 @@
 #SBATCH -p ProdQ
 
 #############################################################################################
-## Author: Sarah Larragy, Joe Colgan (joscolgan)             Program: run_vcf_to_admixture.sh
+## 
+## Author: Sarah Larragy, Joe Colgan (joscolgan)         Program: convert_vcf_to_admixture.sh
 ##
 ## Date: 15/04/2022
 ##
