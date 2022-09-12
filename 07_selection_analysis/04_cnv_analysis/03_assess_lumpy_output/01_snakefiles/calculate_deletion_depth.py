@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 ##############################################################################
 ## 
 ## Author: Joe Colgan                   Program: calculate_deletion_depth.py
