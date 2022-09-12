@@ -1,8 +1,21 @@
+---
+author: "Joe Colgan"
+title: "**Visualisation of output from nSL-based analysis**"
+output:
+  pdf_document: default
+  html_document: default
+fig_width: 4
+fig_height: 4
+fontsize: 20pt
+---
 
+## Introduction
+The purpose of the present analysis is to analyse and visualise the output of the nSL-based analysis for canonical
+immune genes found in the genome of the earth/buff-tailed bumblebee _Bombus terrestris_.  
 
 1. Load libraries:
 
-```{r, message = FALSE}
+```{r, echo = FALSE, message = FALSE, results = 'hide', warning=FALSE}
 library(ggplot2)
 library(ggpubr)
 library(viridis)
@@ -11,9 +24,11 @@ library(dplyr)
 
 2. Load data:
 
-```{r, message=FALSE}
+```{r, echo = FALSE, message = FALSE, results = 'hide', warning=FALSE}
+## Set relative path to input file:
 input <- "data/selection_analyses/nsl_score_abs_top_score_per_gene.txt"
 
+## Read in input data:
 data <- read.table(file = input,
                    header = FALSE)
 
@@ -42,7 +57,7 @@ colnames(all_snp_data) <- c("chromosome",
 
 3. Load immune genes:
 
-```{r, message = FALSE}
+```{r, echo = FALSE, message = FALSE, results = 'hide', warning=FALSE}
 ## Read in a list of canonical immune genes and associated gene groups: 
 immune_genes <- scan(file = "data/gene_lists/barribeau_2015_gene_symbols.txt",
                      as.character())
@@ -54,10 +69,11 @@ immune_genes <- c(immune_genes,
                   "VSP")
 ```
 
-4. Read in population genetic measures, including theta and Tajima's D:
+4. Read in population genetic measures, including pi and Tajima's D:
 
-```{r, message = FALSE}
-pop_data <- read.table(file = "data/selection_analyses/theta_estimates_per_gene_reformatted_subsetted_with_genes.txt",
+```{r, echo = FALSE, message = FALSE, results = 'hide', warning=FALSE}
+## Set relative path to input file:
+pop_data <- read.table(file = "data/selection_analyses/pi_estimates_per_gene_reformatted_subsetted_with_genes.txt",
                        header = FALSE)
 ## Remove redundant fields:
 pop_data$V5 <- NULL
@@ -69,18 +85,19 @@ colnames(pop_data) <- c("chromosome",
                         "start_position",
                         "end_position",
                         "locus",
-                        "theta",
+                        "pi",
                         "tajimas_d",
                         "gene_length",
                         "length_corrected_theta")
 
 ## Correct theta estimates for gene length:
-pop_data$length_corrected_theta <- pop_data$theta/pop_data$gene_length
+pop_data$length_corrected_pi <- pop_data$pi/pop_data$gene_length
 ```
 
 5. Match genes:
 
-```{r, message = FALSE}
+```{r, echo = FALSE, message = FALSE, results = 'hide', warning=FALSE}
+## Add top |nsl| score per gene to the dataframe containing pop genetic output: 
 pop_data$nsl <- data[match(pop_data$locus,
                            data$locus), ]$nsl_score
 
@@ -99,6 +116,7 @@ immune_genes_df <- subset(x = pop_data,
                           locus %in% immune_genes)
 ## Check structure:
 str(immune_genes_df)
+
 ## Classify as 'immune':
 immune_genes_df$status <- "immune"
 
@@ -122,13 +140,13 @@ wilcox.test(immune_genes_df$nsl,
 ## Visualise using box-plots and/or violin plots:
 ## Plot status against absolute nSL score:
 nsl_comp_plot  <- ggplot(data = combined_immune_df,
-       aes(x = status,
-           y = nsl,
-           colour = status)) +
-           geom_violin() +
-  geom_boxplot(width = 0.1,
-               color = "grey",
-               alpha = 0.2) +
+                         aes(x = status,
+                             y = nsl,
+                             colour = status)) +
+                         geom_violin() +
+                         geom_boxplot(width = 0.1,
+                                      color = "grey",
+                                      alpha = 0.2) +
   xlab(label = "Gene category") +
   ylab(label = "|nSL| score") +
     scale_fill_viridis(discrete = TRUE) +
@@ -145,7 +163,7 @@ nsl_comp_plot  <- ggplot(data = combined_immune_df,
 ## Plot status against length corrected nucleotide diversity:
 pi_comp_plot <- ggplot(data = combined_immune_df,
        aes(x = status,
-           y = length_corrected_theta,
+           y = length_corrected_pi,
            colour = status)) +
            geom_violin() +
   geom_boxplot(width = 0.1,
@@ -321,18 +339,18 @@ ggplot(data = new_combined_df,
         legend.position = "none")
 
 ## Check if significant difference in nucleotide diversity between:
-wilcox.test(immune_genes_df$length_corrected_theta,
-            non_immune_genes_df$length_corrected_theta)
+wilcox.test(immune_genes_df$length_corrected_pi,
+            non_immune_genes_df$length_corrected_pi)
 
 wilcox.test(subset(x = new_combined_df,
-                   status == "immune")$length_corrected_theta,
+                   status == "immune")$length_corrected_pi,
             subset(x = new_combined_df,
-                   status == "non-immune")$length_corrected_theta)
+                   status == "non-immune")$length_corrected_pi)
 ```
 
-5. Examine how many canonical immune genes are in top 1%, 5% and 19%:
+6. Examine how many canonical immune genes are in top 1%, 5% and 10% across all genome-wide SNPs:
 
-```{r, message = FALSE}
+```{r, echo = FALSE, message = FALSE, results = 'hide', warning=FALSE}
 ## Identify the nsl threshold for top 10% SNPs cut-off:
 nsl_quantile <- quantile(na.omit(pop_data$nsl),
                          0.90)
@@ -348,18 +366,11 @@ non_immune_genes_top_ten_percent <- subset(x = non_immune_genes_df,
                                        nsl > nsl_quantile)
 ## Calculate the dimensions of the resulting dataframe:
 dim(non_immune_genes_top_ten_percent)
-
-## Construct a contingency table:
-contingency_table <- rbind(c(14, 850),
-                           c(148, 8214))
-
-## Perform a chi-squared test:
-contingency_table_chi <- chisq.test(contingency_table)
 ```
 
 7. Examine nSL values across gene groups:
 
-```{r, message = FALSE}
+```{r, echo = FALSE, message = FALSE, results = 'hide', warning=FALSE}
 ## Read in list of gene groups as identified by Sadd et al. (2015):
 gene_groups <- read.table(file = "data/gene_lists/barribeau_groups_added.txt",
                           header = FALSE)
@@ -371,8 +382,10 @@ colnames(gene_groups) <- c("gene_groups",
 ## Match two dataframes based on locus name:
 tmp <- pop_data[match(gene_groups$locus,
                       pop_data$locus), ]
-## Assign a 'gene_group' columb:
+                      
+## Add a 'gene_group' column:
 tmp$gene_group <- gene_groups$gene_groups
+
 ## Remove 'NA' entries:
 tmp <- na.omit(tmp)
 
@@ -443,7 +456,7 @@ contingency_scp_chisq
 
 8. Next question - do immune genes have more SNPs under selection compared to other genes?
 
-```{r, message = FALSE}
+```{r, echo = FALSE, message = FALSE, results = 'hide', warning=FALSE}
 ## Check contents of dataframe:
 str(all_snp_data)
 
@@ -481,7 +494,7 @@ snp_counts_immune_df$prop <- snp_counts_immune_df$special /
 
 9. Perform the same for all genes:
 
-```{r, message = FALSE}
+```{r, echo = FALSE, message = FALSE, results = 'hide', warning=FALSE}
 ## Subset immune genes:
 snp_non_immune_df <- subset(x = all_snp_data,
                             !(locus %in% immune_genes))
@@ -518,7 +531,7 @@ ggplot(data = subset(snp_counts_non_immune_df,
              colour = "red")
 ```
 
-```{r, message = FALSE}
+```{r, echo = FALSE, message = FALSE, results = 'hide', warning=FALSE}
 ## Generate plot:
 snp_immune_df$annotation_simplified <- immune_snp_data$variant_type
 
@@ -538,7 +551,8 @@ levels(snp_immune_df$annotation_simplified)[!(levels(snp_immune_df$annotation_si
                                                                                "Intron",
                                                                                "Intergenic",
                                                                                "Non-coding RNA"))] <- "Coding"
-
+                                                                               
+## Ensure column is a factor and set levels:
 snp_immune_df$annotation_simplified <- factor(snp_immune_df$annotation_simplified,
                                      levels = rev(c("Non-coding RNA",
                                                     "Coding",
@@ -546,7 +560,10 @@ snp_immune_df$annotation_simplified <- factor(snp_immune_df$annotation_simplifie
                                                     "Intergenic",
                                                     "5kb up/down-stream",
                                                     "Intron")))
+                                                    
+## Print levels to console:
 levels(snp_immune_df$annotation_simplified)
+## Convert gene counts to a dataframe:
 snp_immune_table <- as.data.frame(table(immune_snp_data$locus))
 
 ## Add gene group information:
@@ -572,7 +589,7 @@ levels(snp_non_immune_df$annotation_simplified)[!(levels(snp_non_immune_df$annot
                                                                                "Intron",
                                                                                "Intergenic",
                                                                                "Non-coding RNA"))] <- "Coding"
-
+## Ensure column is a factor and set levels:
 snp_non_immune_df$annotation_simplified <- factor(snp_non_immune_df$annotation_simplified,
                                      levels = rev(c("Non-coding RNA",
                                                     "Coding",
@@ -580,67 +597,89 @@ snp_non_immune_df$annotation_simplified <- factor(snp_non_immune_df$annotation_s
                                                     "Intergenic",
                                                     "5kb up/down-stream",
                                                     "Intron")))
-levels(snp_non_immune_df$annotation_simplified)
-table(snp_non_immune_df$annotation_simplified)
+
+## Count the frequencies of different variant types for immune genes:
 table(snp_immune_df$annotation_simplified)
-sum(table(snp_non_immune_df$annotation_simplified))
-sum(table(snp_immune_df$annotation_simplified))
+## Calculate the sum:
+total_all_immune <- sum(table(snp_immune_df$annotation_simplified))
+total_all_immune
 
-## Generate the number of intronic SNPs per immmune and non-immune genes:
-## Construct a contingency table:
-intron <- rbind(c(8485, 620407),
-                c(12835 - 8485 - 3028,
-                  685034 - 620407 - 12835 - 3028))
-## Perform a chi-squared test:
-intron_chi <- chisq.test(intron)
-## Print outcome of test:
-intron_chi
-## Print observed values:
-intron_chi$observed
-## Print expected values:
-intron_chi$expected
+## Count the frequencies of different variant types for non-immune genes:
+table(snp_non_immune_df$annotation_simplified)
+## Calculate the sum:
+total_all_nonimmune <- sum(table(snp_non_immune_df$annotation_simplified))
+total_all_nonimmune
 
-## Perform the same for SNPs in up/downstream regions:
-## Construct a contingency table:
-stream <- rbind(c(106, 7007),
-                c(439 - 106,
-                  38615 - 7055 - 7007))
-## Perform a chi-squared test:
-stream_chi <- chisq.test(stream)
-## Print outcome of test:
-stream_chi
-## Print observed values:
-stream_chi$observed
-## Print expected values:
-stream_chi$expected
+immune_intron_all     <- table(snp_immune_df$annotation_simplified)["Intron"]
+non_immune_intron_all <- table(snp_non_immune_df$annotation_simplified)["Intron"]
 
-## Perform the same for SNPs in untranslated regions (UTRs):
 ## Construct a contingency table:
-UTR <- rbind(c(639, 33253),
-             c(9807 - 639,
-               685034 - 33253 - 9807))
-## Perform a chi-squared test:
-UTR_chi <- chisq.test(UTR)
-## Print outcome of test:
-UTR_chi
+intron_all <- rbind(c(immune_intron_all,
+                  non_immune_intron_all),
+                c(total_all_immune - immune_intron_all,
+                  total_all_nonimmune - non_immune_intron_all))
+## Perform test:
+intron_all_chi <- chisq.test(intron_all)
+## Print result:
+intron_all_chi
 ## Print observed values:
-UTR_chi$observed
+intron_all_chi$observed
 ## Print expected values:
-UTR_chi$expected
+intron_all_chi$expected
 
-## Perform the same for SNPs in coding regions:
+## Perform the same for SNP 5kb up/downstream of SNPs: 
+immune_stream_all  <- table(snp_immune_df$annotation_simplified)["5kb up/down-stream"]
+non_immune_stream_all  <- table(snp_non_immune_df$annotation_simplified)["5kb up/down-stream"]
+
 ## Construct a contingency table:
-coding <- rbind(c(683, 29822),
-                c(9807 - 683,
-                  685034 - 29822 - 9807))
-## Perform a chi-squared test:
-coding_chi <- chisq.test(coding)
-## Print outcome of test:
-coding_chi
+stream_all <- rbind(c(immune_stream_all,
+                  non_immune_stream_all),
+                c(total_all_immune - immune_stream_all,
+                  total_all_nonimmune - non_immune_stream_all))
+## Perform test:
+stream_all_chi <- chisq.test(stream_all)
+## Print result:
+stream_all_chi
 ## Print observed values:
-coding_chi$observed
+stream_all_chi$observed
 ## Print expected values:
-coding_chi$expected
+stream_all_chi$expected
+
+## Perform the same for SNPs in UTRs: 
+immune_utr_all  <- table(snp_immune_df$annotation_simplified)["UTR"]
+non_immune_utr_all  <- table(snp_non_immune_df$annotation_simplified)["UTR"]
+
+## Construct a contingency table:
+utr_all <- rbind(c(immune_utr_all,
+                  non_immune_utr_all),
+                c(total_all_immune - immune_utr_all,
+                  total_all_nonimmune - non_immune_utr_all))
+## Perform test:
+utr_all_chi <- chisq.test(utr_all)
+## Print result:
+utr_all_chi
+## Print observed values:
+utr_all_chi$observed
+## Print expected values:
+utr_all_chi$expected
+
+## Perform the same for SNPs in coding regions: 
+immune_cds_all  <- table(snp_immune_df$annotation_simplified)["Coding"]
+non_immune_cds_all  <- table(snp_non_immune_df$annotation_simplified)["Coding"]
+
+## Construct a contingency table:
+cds_all <- rbind(c(immune_cds_all,
+                   non_immune_cds_all),
+                   c(total_all_immune - immune_cds_all,
+                     total_all_nonimmune - non_immune_cds_all))
+## Perform test:
+cds_all_chi <- chisq.test(cds_all)
+## Print result:
+cds_all_chi
+## Print observed values:
+cds_all_chi$observed
+## Print expected values:
+cds_all_chi$expected
 ```
 
 If we look at SNPs with signatures of selection:
@@ -745,11 +784,11 @@ cds_table_chi$observed
 cds_table_chi$expected
 ```
 
-To determine whether canonical immune genes are identified as under selection
+10. To determine whether canonical immune genes are identified as under selection
 in other datasets, we can load in the nSL scores for the population genomic 
 analysis from the Colgan et al. (2022, MBE) - available in Supplemental Table S2.
 
-```{r, message = FALSE}
+```{r, echo = FALSE, message = FALSE, results = 'hide', warning=FALSE}
 ## Read in data and store in an object:
 british_nsl_data <- read.table(file = "data/selection_analyses/british_nsl_scores.txt",
                                header = FALSE)
@@ -827,9 +866,9 @@ ggsave(filename = "results/combined_plot_figure_1.pdf",
        dpi= 600)
 ```
 
-Check style with lintr:
+11. Check style with lintr:
 
-```{r, message = FALSE}
+```{r, echo = FALSE, message = FALSE, results = 'hide', warning=FALSE}
 require(lintr)
 lintr::lint(file = "plot_nsl_scores_immune.Rmd")
 ```
