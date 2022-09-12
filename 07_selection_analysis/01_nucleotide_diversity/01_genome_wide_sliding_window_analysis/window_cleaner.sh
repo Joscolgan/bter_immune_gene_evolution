@@ -1,11 +1,25 @@
 #!/bin/sh
 
+################################################################################################
+##
+## Author: Joe Colgan (joscolgan).                          Program: window_cleaner.sh
+##
+## Date: 20-04-2022
+## 
+## Purpose:
 ## A script to take a tab-delimited text file as input:
 ## - Extract the gene/window coordinates;
 ## - Count the number of ambigious bases in each window;
-## - Remove windows where bases make up at least 10 percent as may be the result of gaps/technical artefacts;
-## - Run zscore analysis to identify windows with sig. higher or lower genetic diversity compared to rest of genome:
+## - Remove windows where bases make up at least 10 percent as may be the result of gaps/technical
+## artefacts;
+## - Run zscore analysis to identify windows with sig. higher or lower genetic diversity compared 
+## to rest of genome:
+## The script outputs tab-delimited text files of genes of interest found in regions of elevated
+## or reduced nucleotide diversity:
+##
+################################################################################################
 
+## Load R:
 module load r
 
 ## Take input and output as arguments from the command line:
@@ -14,6 +28,7 @@ reference=$2
 gff=$3
 output=$4
 
+## Print to console:
 echo "$reference"
 echo "$gff"
 
