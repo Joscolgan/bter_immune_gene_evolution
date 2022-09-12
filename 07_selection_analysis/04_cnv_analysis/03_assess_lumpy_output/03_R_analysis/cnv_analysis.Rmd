@@ -336,7 +336,7 @@ length(unique(potential_sig_dups$`rownames(combined_counts_normalized)`))
 sort(table(potential_sig_dups$`rownames(combined_counts_normalized)`))
 ```
 
-## Step Eight: Identification of the number of sites per individual falling within duplicated regions:
+## Step Nine: Identification of the number of sites per individual falling within duplicated regions:
 
 ```{r}
 ## Subset the number of putatively duplicated sites with RD higher than 3 standard deviation from mean of randomly chosen sites.
@@ -432,7 +432,7 @@ write.table(x = high_read_counts_table_df,
             sep = "\t")
 ```
 
-Subset raw and normalised counts of duplicated sites:
+## Step Ten: Subset raw and normalised counts of duplicated sites:
 
 ```{r, message = FALSE}
 ## Extract raw counts for duplicated sites:
