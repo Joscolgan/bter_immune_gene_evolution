@@ -7,9 +7,9 @@
 ##
 ## Purpose:
 ## This script takes an alignment BAM file per sample and intersects with multiple 
-## BED files containing the genomic positions of individual putative duplication events. 
+## BED files containing the genomic positions of individual putative deletion events. 
 ## The intersection process outputs individual BAM files containing reads aligned
-## to each putative duplication (bin). The number of aligned reads per BAM are 
+## to each putative deletion (bin). The number of aligned reads per BAM are 
 ## calculated for each genomic base per individual. The median number of aligned reads
 ## is calculated and output to a text file for loadiing into R.
 ##
@@ -72,8 +72,8 @@ from helper_functions import *
 ##############################################################################
 # Assign global variables for use in rules (see below)
 ##############################################################################
-# Assign name for list of paths for files containing putative duplications
-DUPLICATION_LIST = "CNV_deletions.txt"
+# Assign name for list of paths for files containing putative deletions
+DELETION_LIST = "CNV_deletions.txt"
 
 ##############################################################################
 # Assignment of wildcards to be used within rules
@@ -84,11 +84,11 @@ with open('samples_list.txt') as samples:
     SAMPLES = [samples.rstrip('\n') for samples in content]
     print(SAMPLES)
 
-# Read in the content of the duplication list - one duplication per line
-with open('CNV_deletions.txt') as duplications:
-    dup_content = duplications.readlines()
-    DUPLICATIONS = [duplications.rstrip('\n') for duplications in dup_content]
-    print(DUPLICATIONS)
+# Read in the content of the deletion list - one deletion per line
+with open('CNV_deletions.txt') as deletions:
+    del_content = deletions.readlines()
+    DELETIONS = [deletions.rstrip('\n') for deletions in del_content]
+    print(DELETIONS)
 
 ##############################################################################
 # Specify all input/output files in terms of sample wildcards
@@ -97,25 +97,25 @@ with open('CNV_deletions.txt') as duplications:
 ALIGNED_DATA            = "results/{samples}_RG_updated.bam"
 
 # Assign path for BED files containing CNV information.
-DUPLICATED_DATA         = "filtered_deleted_beds/{duplications}.bed"
+DELETED_DATA         = "filtered_deleted_beds/{deletions}.bed"
 
 # Output intersected BAM files here.
-INTERSECTED_DATA        = "raw_deletion_temp/01_intersect_bam/{duplications}.{samples}.bam"
+INTERSECTED_DATA        = "raw_deletion_temp/01_intersect_bam/{deletions}.{samples}.bam"
 
 # Output depth counts here.
-DEPTH_DATA              = "raw_deletion_temp/02_depth_bam/{duplications}.{samples}.depth.txt"
+DEPTH_DATA              = "raw_deletion_temp/02_depth_bam/{deletions}.{samples}.depth.txt"
 
 # Output mean counts per sample here.
-CALCULATED_MEDIAN_DATA  = "raw_deletion_temp/03_median_counts/{duplications}.{samples}.median_depth.txt"
+CALCULATED_MEDIAN_DATA  = "raw_deletion_temp/03_median_counts/{deletions}.{samples}.median_depth.txt"
 
 # Output combined mean data here.
-COMBINED_MEDIAN_DATA    = "raw_deletion_temp/04_combined_counts/{duplications}.combined.median_depth.txt"
+COMBINED_MEDIAN_DATA    = "raw_deletion_temp/04_combined_counts/{deletions}.combined.median_depth.txt"
 
 # Output combined CNV mean data here.
 COMBINED_CNV_DATA       = "raw_deletion_temp/05_combined_CNV_means/combined.median_depth.all_CNVs.txt"
 
 # Output final data file here.
-FINAL_DATA              = "raw_deletion_temp/06_final/final_combined.median_depth.all_dups.txt"
+FINAL_DATA              = "raw_deletion_temp/06_final/final_combined.median_depth.all_dels.txt"
 
 ##############################################################################
 # Define binaries in context of path relative to Snakefile
@@ -144,7 +144,7 @@ rule all:
 # Each rule will specify an intermediate step
 # Intersect BAM file using BED files populated with CNV genomic co-ordinates
 rule intersect_bam:
-    input:  ALIGNED_DATA, DUPLICATED_DATA
+    input:  ALIGNED_DATA, DELETED_DATA
     output: INTERSECTED_DATA
     run:
         check_files_arent_empty(input)
@@ -168,7 +168,7 @@ rule calculate_median:
 
 # Paste the means for each sample per row
 rule paste_means:
-    input:  expand("raw_deletion_temp/03_median_counts/{{duplications}}.{samples}.median_depth.txt", samples = SAMPLES)
+    input:  expand("raw_deletion_temp/03_median_counts/{{deletions}}.{samples}.median_depth.txt", samples = SAMPLES)
     output: COMBINED_MEDIAN_DATA
     run:
         check_files_arent_empty(input)
@@ -176,7 +176,7 @@ rule paste_means:
 
 # Combine the CNV mean rows
 rule combine_CNVs:
-    input:  expand("raw_deletion_temp/04_combined_counts/{duplications}.combined.median_depth.txt", duplications = DUPLICATIONS)
+    input:  expand("raw_deletion_temp/04_combined_counts/{deletions}.combined.median_depth.txt", deletions = DELETIONS)
     output: COMBINED_CNV_DATA
     run:
         check_files_arent_empty(input)
@@ -188,4 +188,4 @@ rule add_CNV_names:
     output: FINAL_DATA
     run:
         check_files_arent_empty(input)
-        shell("paste {DUPLICATION_LIST} {input} > {output} && [[ -s {output} ]]")
+        shell("paste {DELETION_LIST} {input} > {output} && [[ -s {output} ]]")
