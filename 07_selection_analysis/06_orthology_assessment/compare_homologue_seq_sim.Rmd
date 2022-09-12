@@ -1,11 +1,26 @@
+---
+author: "Joe Colgan"
+title: "**Comparison of sequence similarity for canonical immune genes**"
+output:
+  pdf_document: default
+  html_document: default
+fig_width: 4
+fig_height: 4
+fontsize: 20pt
+---
+
+## Introduction:  
+The purpose of this script is to assess homology between canonical immune genes for the earth bumblebee _Bombus terrestris_ 
+and two other insect species: the closely related honeybee, _Apis mellifera_, and the fruit fly, _Drosophila melanogaster_.  
 
 1. Load libraries:
 
 ```{r, message = FALSE}
-require(ggplot2)
+library(ggplot2)
+library(reshape2)
 ```
 
-2. Load data:
+2. Read in compariative data between _B. terrestris_ and _A. mellifera_:
 
 ```{r, message = FALSE}
 data <- read.table(file = "data/gene_lists/ensembl_bter_amel_comp.txt",
@@ -24,7 +39,7 @@ data <- subset(x = data,
                orthology_confidence == 1)
 ```
 
-3. Load them against each other:
+3. Plot percentage of identify between protein homologues.
 
 ```{r, message = FALSE}
 ggplot(data = data,
@@ -48,6 +63,7 @@ busted_subset <- subset(x = busted_output,
 loss_of_function_genes <- scan(file = "data/gene_lists/loss_of_function_genes.txt",
                      as.character())
 
+## Plot protein sequence similarity:
 bter_amel_plot <- ggplot(data = data,
        aes(x = percent_id_target_to_query,
            y = percent_id_query_to_target)) +
@@ -93,7 +109,7 @@ bter_amel_plot <- ggplot(data = data,
   stat_cor(p.accuracy = 0.0001)
 ```
 
-5. Read in data for Drosophila melanogaster:
+5. Read in data for _Drosophila melanogaster_:
 
 ```{r, message = FALSE}
 dmel_data <- read.table(file = "data/gene_lists/ensembl_bter_dmel_comp.txt",
@@ -110,16 +126,7 @@ dmel_data <- subset(x = dmel_data,
                orthology_confidence == 1)
 ```
 
-3. Load them against each other:
-
-```{r, message = FALSE}
-ggplot(data = dmel_data,
-       aes(x = percent_id_target_to_query,
-           y = percent_id_query_to_target)) +
-  geom_point()
-```
-
-4. Read in genes of interest:
+6. Plot percentage of identify between protein homologues.
 
 ```{r, message = FALSE}
 bter_dmel_plot <- ggplot(data = dmel_data,
@@ -162,6 +169,7 @@ bter_dmel_plot <- ggplot(data = dmel_data,
   theme_bw() + 
   stat_cor(p.accuracy = 0.0001)
 
+## Generate a combined plot:
 ggarrange(bter_amel_plot,
           bter_dmel_plot,
           ncol = 2,
@@ -171,7 +179,7 @@ ggarrange(bter_amel_plot,
           align = "hv")
 ```
 
-Compare homology across genes:
+7. Compare homology across eleven bee species:
 
 ```{r, message = FALSE}
 bee_comp <- read.table(file = "data/loss_of_function_genes_comp.txt",
@@ -179,7 +187,6 @@ bee_comp <- read.table(file = "data/loss_of_function_genes_comp.txt",
 bee_comp$HOG <- NULL
 bee_comp$Gene_Tree_Parent_Clade <- NULL
 
-library(reshape2)
 
 tmp <- bee_comp[c(3:5), ]
 tmp_melt <- melt(tmp, id.vars = "OG")
@@ -203,6 +210,7 @@ tmp_melt$variable <- factor(tmp_melt$variable,
                                        "Megalopta genalis",
                                        "Nomia melanderi"))
 
+## plot heatmap of homology:
 heatmap <- ggplot(tmp_melt,
        aes(x = OG,
            y = variable,
@@ -219,6 +227,7 @@ heatmap <- ggplot(tmp_melt,
         axis.title = element_blank()) +
   scale_y_discrete(limits=rev)
 
+## Generate a combined plot:
 ggarrange(bter_amel_plot,
           heatmap,
           ncol = 2,
@@ -227,8 +236,8 @@ ggarrange(bter_amel_plot,
           labels = c("A",
                      "B"))
 
+## Save plot to file:
 ggsave(filename = "comp_test.pdf",
        height = 4,
        width = 6)
-
 ```
