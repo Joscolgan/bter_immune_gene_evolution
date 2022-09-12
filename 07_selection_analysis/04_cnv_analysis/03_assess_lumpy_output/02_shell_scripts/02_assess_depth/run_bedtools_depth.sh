@@ -5,6 +5,22 @@
 #SBATCH -A mulif005c
 #SBATCH -p ProdQ
 
+#############################################################################################
+##
+## Author: Sarah Larragy, Joe Colgan (joscolgan)       	Program: run_bedtools_depth.sh
+##
+## Date: 28-06-22
+##
+## Introduction:
+## The purpose of this script is to calculate read depth for putative copy number variation.
+## The script takes a folder containing individual BED files corresponding to a CNV, intersects
+## the coordinates of each putative CNV with an alignment (bam) file for each individual sample
+## and calculates the number of reads covering each base of the putative CNV.
+## The script outputs a tab-delimited file for each CNV containing the read depth for each base
+## within a CNV.
+##
+#############################################################################################
+
 for name in bed_files/B*bed;
 do
 bam_file="$(echo "$name" | cut -d '.' -f 1 )";
