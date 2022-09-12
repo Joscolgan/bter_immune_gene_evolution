@@ -8,7 +8,7 @@
 #############################################################################################
 ## Author: Sarah Larragy, Joe Colgan (joscolgan)                 Program: run_bowtie2.sh
 ##
-## Date: 28/06/22
+## Date: 02/02/22
 ##
 ## Introduction:
 ## The purpose of this script is to take fastp-filtered FASTQ sequences and align
