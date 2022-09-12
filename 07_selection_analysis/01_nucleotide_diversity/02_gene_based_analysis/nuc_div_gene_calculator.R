@@ -8,27 +8,40 @@
 ## Purpose:
 ##  - Read in text file containing information of VCF file for each chromosome, as well
 ##    as start base position and end base position for each corresponding chromosome.
-##  - Calculate diversity and neutrality statistics for each chromosome.
+##  - Calculate diversity and neutrality statistics for each gene.
 ##  - Output a table containinig -
 ##      a) Chromosome
-##      b) start position of genomic window
-##      c) end position of genomic window
-##      d) nucleotide diversity for user-defined genomic window
-##      e) number of segregating sites for user-defined genomic window
-##      f) Tajima's D for use-defined genomic window
-##      g) midpoint position of genomic window
+##      b) start position of gene
+##      c) end position of gene
+##      d) nucleotide diversity for gene
+##      e) number of segregating sites for gene
+##      f) Tajima's D for gene
+##      g) midpoint position of gene
 ##
 ##########################################################################################
 
-input <- "chromosome_info.txt"
+args = commandArgs(trailingOnly=TRUE)
+
+## Assign 'chromosome_info.txt' to input:
+input <- args[1]
+print(input)
+
+## Assign reference gff to input_gff:
+input_gff <- args[2]
+print(input_gff)
+
+## Assign third argument to output
+output <- args[3]
+print(output)
+
+## Manually set bin width (e.g. size of sliding window):
 bin_width <- 10000
-input_gff <- "./gff/Bombus_terrestris.Bter_1.0.51.gff3"
-output <- "../results/theta_estimates_per_gene.txt"
+jump_width <- bin_width / 2
 
 # Load libraries; install from scratch if needed
 libraries <- c("ggplot2",
-"PopGenome",
-"stringr")
+               "PopGenome",
+               "stringr")
 for (lib in libraries) {
     if (require(package = lib, character.only = TRUE)) {
         print("Successful")
