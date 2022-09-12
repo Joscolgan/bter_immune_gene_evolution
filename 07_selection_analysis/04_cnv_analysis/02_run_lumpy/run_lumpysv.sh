@@ -5,7 +5,23 @@
 #SBATCH -A mulif005c
 #SBATCH -p ProdQ
 
-
+################################################################################################
+##
+## Author: Sarah Larragy, Joe Colgan (joscolgan).                    Program: run_lumpysv.sh
+##
+## Date: 20-04-2022
+## 
+## Purpose:
+## This script takes for each sample:
+## - An alignment file in bam format sorted by position.  
+## - An alignment file in bam format populated with discordant reads.  
+## - An alignment file in bam format populated with split reads.   
+## These files are used by lumpysv to identify putative copy number variants present in the input
+## population. The script outputs a file in variant call format (VCF) providing information on
+## the physical genomic locations of putative sites, as well as measures of support, as well
+## as genotype calls for each individual.
+##
+################################################################################################
 
 lumpyexpress -B \
 results_dtol/MU_01_FDPL190630198-1a_HJL3TDSXX_L1_dtol_alignment.sorted,\
