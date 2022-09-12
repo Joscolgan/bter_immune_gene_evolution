@@ -1,9 +1,9 @@
 #!/usr/bin/env Rscript
 ##########################################################################################
 ##
-## Author: Joe Colgan                           Program: nuc_div_calculator.R
+## Author: Joe Colgan (joscolgan)                    Program: nucleotide_div_calculator.R
 ##
-## Date: 04-03-2018
+## Date: 20-04-2022
 ##
 ## Purpose:
 ##  - Read in text file containing information of VCF file for each chromosome, as well
@@ -22,14 +22,6 @@
 
 ## Take arguments from the command line:
 args = commandArgs(trailingOnly=TRUE)
-
-# test if there is at least one argument: if not, return an error
-#if (length(args)==0) {
-#  stop("At least one argument must be supplied (input file).n", call.=FALSE)
-#} else if (length(args)==1) {
-#  # default output file
-#  args[3] = "out.txt"
-#}
 
 ## Assign 'chromosome_info.txt' to input:
 input <- args[1]
@@ -61,14 +53,15 @@ for (lib in libraries) {
     }
 }
 
-options(scipen=999)
+## Turn off scientific notation:
+options(scipen = 999)
 
 ## Load data
 ## Read in the tabix indexed VCF
 ## The input parameters include:
 ## 1) Tabix-indexed bgzipped file
 ## 2) numcols: number of SNPs that should be read in as a chunk
-## 3) tid: The ID of the chromosome e.g. "NC_015764.1"
+## 3) tid: The ID of the chromosome
 ## 4) Frompos: From position e.g. 1
 ## 5) topos: End positon (probably length of chromosome)
 ## An additional parameter is to include a gff
@@ -77,8 +70,7 @@ options(scipen=999)
 chrom_data <- read.table(input, header = FALSE)
 chrom_data <- as.matrix(chrom_data)
 
-## Divide each chromosome into sliding windows (window size: 10kb, jump size:5kb)
-##
+## Divide each chromosome into sliding windows (window size: 10kb, jump size:5kb):
 count <- 0
 nucdiv_combined_df <- data.frame()
 
@@ -119,7 +111,7 @@ for (item in 1:nrow(chrom_data)){
         ## Calculation of nucleotide diversity:
         nucdiv_item          <- chrom_data_item@nuc.diversity.within
         nucdiv_item          <- nucdiv_item/bin_width
-        nucdiv_item.df <- as.data.frame(cbind(nucdiv_item, region_names_df))
+        nucdiv_item.df       <- as.data.frame(cbind(nucdiv_item, region_names_df))
         print(head(nucdiv_item.df))
         nucdiv_item.df$chrom <- chrom
         nucdiv_item.df$tajima_d <- chrom_data_item@Tajima.D
@@ -147,26 +139,10 @@ print(head(nucdiv_combined_df))
 ## Calcule median nucletide diversity
 nucdiv_median <- median(as.numeric(as.character(nucdiv_combined_df$nuc_diversity)))
 
-## Convert to numeric values:
-#nucdiv_combined_df$nuc_diversity <- as.numeric(as.character(nucdiv_combined_df$nuc_diversity))
-##nucdiv_combined_df$start         <- as.numeric(as.character(unlist(nucdiv_combined_df$start)))
-##nucdiv_combined_df$end           <- as.numeric(as.character(unlist(nucdiv_combined_df$end)))
-#nucdiv_combined_df$seg_sites     <- as.numeric(as.character(nucdiv_combined_df$seg_sites))
-#nucdiv_combined_df$tajima_d      <- as.numeric(as.character(nucdiv_combined_df$tajima_d))
-#nucdiv_combined_df$midpoint      <- round((nucdiv_combined_df$start + nucdiv_combined_df$end)/2)
-
 ## Export table:
 write.table(nucdiv_combined_df,
-output,
-row.names = FALSE,
-col.names = TRUE,
-quote = FALSE,
-sep="\t")
-
-## Export table:
-#write.table(fst_estimates_df,
-#"./fst_estimates.txt",
-#row.names = FALSE,
-#col.names = TRUE,
-#quote = FALSE,
-#sep="\t")
+            output,
+            row.names = FALSE,
+            col.names = TRUE,
+            quote = FALSE,
+            sep = "\t")
