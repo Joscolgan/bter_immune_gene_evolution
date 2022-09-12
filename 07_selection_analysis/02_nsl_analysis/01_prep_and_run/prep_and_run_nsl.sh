@@ -1,46 +1,38 @@
 #!/bin/env sh
 #############################################################################################
-## Author: Joe Colgan, Sarah Larragy			Program: prep_and_run_nsl.sh
 ##
-## Date: 28/06/22
+## Author: Sarah Larragy, Joe Colgan (joscolgan)       	Program: prep_and_run_nsl.sh
+##
+## Date: 28-06-22
 ##
 ## Introduction:
 ## The purpose of this script is to prepare input files for selscan to perform 
 ## tests of extended haplotype homozygosity, such as nSL.
+## The input file is a filtered VCF (compressed; .gz).  
+## The output file is tab-delimited text file containing highest |nsl| score per gene.
 ##
 #############################################################################################
 
 ## Extended haplotype homozygosity test (nSL)
-
 ## Load R :
 module load r
 
-
-## Make following directories :
-
+## Make following subdirectories :
 mkdir input/variant_files
 mkdir input/hap
 mkdir input/map
 mkdir results
 
-
 ## Take input from the command line :
-
 input_vcf=$1
 
 cd input
 
-
 ## Create a file containing list of chromosome/LG names :
-
 grep -v '#' "$input_vcf" | \
-
 cut -f 1 | sort | uniq > chromosome_list.txt
 
-
 ## Using the chromosome list, create individual vcf files for each chromosome :
-
-
 while read line
 do
 vcftools --vcf "$input_vcf"  \
@@ -68,7 +60,6 @@ plink --vcf "$name" \
       --allow-extra-chr \
       --out map/"$new_name";
 
-
 ## Subset columns of interest :
 cut -f 1,2,3,4 map/"$new_name".bim > map/"$new_name".tmp;
 awk '{ print $1,$2,$4,$4 }' map/"$new_name".tmp | tr ' ' '\t' > map/"$new_name".map;
@@ -78,7 +69,6 @@ done
 rm -r vcf/
 
 ## Run nsl :
-
 for name in hap/*.out;
 do
 new_name="$(echo "$name" | cut -d '/' -f 2 | cut -d '.' -f 1,2 )";
@@ -104,13 +94,14 @@ echo "$chrom_name" >> "$chrom_name".tmp;
 done < "$name";
 paste "$chrom_name".tmp "$name" >> "$name"_plus_chrom.txt; done 
 
-## Get absolute values for nsl and combine files, filtering out non-genic regions :
+## Get absolute scores for nsl and combine files, filtering out non-genic regions :
 paste <(grep -v ‘#’ vcf | cut -f 1,2,8 | cut -d ‘|’ -f 1-4 | sed ’s/\|/\t/g’ | cut -f 1,2,4,5,6)\
  <(cut -f 8 combined_abs_nsl.txt) > file.txt
 
-sort -k6,6gr file.txt
+## Sort by absolute nsl scores:
+sort -k6,6gr file.txt >  file_sorted.txt
 
 while read $line;
 do;
-grep -w “$line” file.txt | grep -v ‘intergenic’ | grep -v ‘stream’ | head -n 1 >> new_file ;
+grep -w “$line” file_sorted.txt | grep -v ‘intergenic’ | grep -v ‘stream’ | head -n 1 >> top_nsl_per_gene.txt ;
 done < gene_list.txt
