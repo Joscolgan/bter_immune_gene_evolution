@@ -37,12 +37,12 @@ dir.create("results")
 
 ## Take arguments from the command line:
 ## Provide access to a copy of the command line arguments supplied when R session is invoked
-args <- commandArgs(TRUE)
-input <- args[1] 						# Assign first argument as input
-output <- args[2]
-slide_max <- args[3]
-slide_snp <- args[4]
-ld_threshold <- args[5]
+#args <- commandArgs(TRUE)
+input <- "data/out_irish_hetremoved_raresnpsremoved.ann.vcf"
+output <- "results/out_irish_hetremoved_raresnpsremoved.ann"
+slide_max <- 100000
+slide_snp <- 1000
+ld_threshold <- 0.1
 slide_max <- as.numeric(slide_max)
 slide_snp <- as.numeric(slide_snp)
 ld_threshold <- as.numeric(ld_threshold)
@@ -59,7 +59,9 @@ input_vcf <- input
 ## to reside in memory. GDS formatted data is also designed for efficient data access to large datasets.
 
 ## Use the name of input to designate the name for the GDS file format.
-input_vcf_gds <- gsub(".vcf", ".gds", input_vcf)
+input_vcf_gds <- gsub(".vcf",
+                      ".gds",
+                      input_vcf)
 
 ## Reformat VCF into GDS format
 snpgdsVCF2GDS(input_vcf,
@@ -81,28 +83,6 @@ snpset <- snpgdsLDpruning(input_vcf_gds_genofile,
                           ld.threshold = ld_threshold,
                           autosome.only = FALSE)
 print(class(snpset))
-print("Ran pca")
-
-## Get all selected SNP ids:
-snpset.id <- unlist(unname(snpset))
-
-snplist <- snpgdsSNPList(input_vcf_gds_genofile)
-
-snpset_df <- subset(snplist, snp.id %in% snpset.id)
-
-write.table(snpset_df,
-            file = paste("results/snpset_",
-                         slide_max,
-                         "_",
-                         slide_snp,
-                         "_",
-                         ld_threshold,
-                         ".txt",
-                         sep = ""), 
-            col.names = FALSE, 
-            row.names = FALSE, 
-            quote = FALSE, 
-            sep = "\t")
 
 ## Perform PCA and store output in variable:  
 pca        <- snpgdsPCA(input_vcf_gds_genofile,
@@ -119,204 +99,189 @@ print(round(pc_percent, 2))
 sample_id     <- read.gdsn(index.gdsn(input_vcf_gds_genofile,
                                       "sample.id"))
 
-## Read in file containing treatment information. 
-## This file should contain 'treatment information' for each sample and be in the same order as each sample. 
-## i.e. the first treatment information would be assigned to the first sample, etc., etc.
-## Read in table:
-pop_code_df <- read.table(file = "data/population_information_all_ordered_n93.txt",
-                          header = FALSE)
-
-## Rename columns:
-colnames(pop_code_df) <- c("sample",
-                           "site_number",
-                           "county",
-                           "country")
-
-## 
-pop_code <- pop_code_df$country
-
 ## Generate a dataframe containing a column for:
 ## 1) Sample name
 ## 2) Treatment condition
 ## 3) First principal component of interest
 ## 4) Second principal component of interest
 tab <- data.frame(sample.id = pca$sample.id,
-                  pop = factor(pop_code)[match(pca$sample.id, sample_id)],
+                  #pop = factor(pop_code)[match(pca$sample.id, sample_id)],
                   EV1 = pca$eigenvect[, 1],    # the first eigenvector
                   EV2 = pca$eigenvect[, 2],    # the second eigenvector
                   stringsAsFactors = FALSE)
 
 ## Rename the samples for plotting:  
-## Renaming the sample.ids
 new_names <- list()
 
 ## Create a list:
 for (name in sample_id){
-        new_names[name] <- paste(strsplit(name, "_")[[1]][5],
-        "_", strsplit(name, "_")[[1]][6],
+        new_names[name] <- paste(strsplit(name, "_")[[1]][1],
+        "_", strsplit(name, "_")[[1]][2],
         sep = "")
 }
 
 ## Unlist as a character string and update sample ids:
 tab$sample.id <- as.character(unlist(new_names))
 
-## Add another column for site_id:
-tab$site_id <- pop_code_df$site_number
-
-## Add column for latitude:
-#tab$latitude <- pop_code_df$latitude
-
-## Check status of whether there are two or one individual per site:
-new_site_id <- vector()
-
-for (i in 1:length(tab$site_id)){
-        status <- duplicated(tab$site_id)[i]
-        if (status==FALSE){
-                print("Not duplicated")
-                new_site_id <- c(new_site_id, paste(tab$site_id[i], "A", sep=""))
-        }
-        else {
-                print("Duplicated")
-                new_site_id <- c(new_site_id, paste(tab$site_id[i], "B", sep=""))
-        }
-}
-
 ## Update site information: 
 tab$site_id <- new_site_id
 
-## Alternatively, to plot with just sample ids and not points:
-landuse_plot <- ggplot(tab,
-                    aes(x = tab$EV1,
-                        y = tab$EV2,
-                        color = tab$pop)) +
-        #geom_point(shape = 16, size = 4, alpha = 0.4, show.legend = T) +
+## Generate a basic plot:
+pca_plot <- ggplot(tab,
+                    aes(x = EV1,
+                        y = EV2)) +
+        geom_point(shape = 16,
+                   size = 4,
+                   alpha = 0.4,
+                   show.legend = TRUE) +
         theme_minimal() +
-        xlab(paste("Principal component", 1," ","(",round(pc_percent[1], 2), "%", ")", sep = "")) +
-        ylab(paste("Principal component", 2," ","(",round(pc_percent[2], 2), "%", ")", sep = "")) +
-#geom_text(size = 6, position = position_jitter(width = 0.04, height = 0.04),
-        geom_text(size = 5,
-        aes(label = tab$site_id, color = tab$pop)) +
-        scale_color_manual(values = c("blue", "orange", "red", "pink", "green", "brown", "black")) +
-              theme(axis.text=element_text(size = 20),
-                    axis.title=element_text(size = 20,
-                                            face = "plain")) +
+        xlab(paste("Principal component",
+                   1,
+                   " ",
+                   "(",
+                   round(pc_percent[1],
+                         2), "%", ")",
+                   sep = "")) +
+        ylab(paste("Principal component",
+                   2,
+                   " ",
+                   "(",
+                   round(pc_percent[2],
+                         2), "%", ")",
+                   sep = "")) +
+              theme(axis.text = element_text(size = 10),
+                    axis.title = element_text(size = 12,
+                                            face = "bold")) +
                     theme(legend.position = "none")
-## Plot:
-#ggsave(file = landuse_output,
-#        width = 10,
-#        height = 10)
-
-## Alternatively, to plot with just sample ids and not points:
-#lat_plot <- ggplot(tab,
-#            aes(x = tab$EV1,
-#                y = tab$EV2,
-#                fill = tab$latitude)) +
-#                #color = tab$pop)) +
-#                #geom_point(shape = 16, size = 4, alpha = 0.4, show.legend = T) +
-#            theme_minimal() +
-#            xlab(paste("Principal component", 1," ","(",round(pc_percent[1], 2), "%", ")", sep = "")) +
-#            ylab(paste("Principal component", 2," ","(",round(pc_percent[2], 2), "%", ")", sep = "")) +
-#            #geom_text(size = 6, position = position_jitter(width = 0.04, height = 0.04),
-#            #geom_text(size = 6, position=position_jitter(width=0.04, height=0.04), aes(label=tab$site_id, color=tab$latitude)) +
-#            geom_text(size = 5, aes(label=tab$site_id, color=tab$latitude)) +
-#            scale_fill_distiller(palette = "Blues") +
-#            theme(axis.text = element_text(size = 20),
-#            axis.title = element_text(size = 20,
-#            face = "plain")) +
-#            theme(legend.position = "none")
-
-## Plot:
-#ggsave(file = lat_output,
-#       dpi = 600,
-#       width = 10,
-#       height = 10)
-
 
 ## Explore relatedness among individuals:
-
-# Estimate IBD coefficients
-ibd_mom <- snpgdsIBDMoM(input_vcf_gds_genofile,
-                        sample.id = sample_id,
-                        snp.id = snpset.id,
-                        maf = 0.05,
-                        missing.rate = 0.05,
-                        num.thread = 20,
-                        autosome.only = FALSE)
-# Make a data.frame
-ibd_mom_coeff <- snpgdsIBDSelection(ibd_mom)
-
-## Alternatively, to plot with just sample ids and not points:
-ibd_plot<- ggplot(ibd_mom_coeff,
-                  aes(x = ibd_mom_coeff$k0,
-                    y = ibd_mom_coeff$k1)) +
-                  geom_point(shape = 16,
-                             size = 4,
-                             alpha = 0.4,
-                             show.legend = TRUE) +
-                  theme_minimal() +
-                  xlab("K0") +
-                  ylab("K1")
-#geom_text(size=6, position=position_jitter(width=0.04, height=0.04), aes(label=tab$site_id, color=tab$pop)) +
-#scale_color_manual(values= c("blue", "orange", "red"))
-## Save file:
-#ggsave(file = "ibd_mon_plot.png",
-#       width = 10,
-#       height = 10)
-
-## Set seed:
-set.seed(100)
-## Randomly sample 2000 SNPs
-snp.id <- sample(snpset.id, 2000)  # random 2000 SNPs
-ibd_mle <- snpgdsIBDMLE(input_vcf_gds_genofile,
-                        sample.id = sample_id,
-                        snp.id = snp.id,
-                        maf = 0.05,
-                        missing.rate = 0.05,
-                        num.thread = 20,
-                        autosome.only = FALSE)
-# Make a data.frame
-ibd_coeff_mle <- snpgdsIBDSelection(ibd_mle)
-ibd_mle_plot<- ggplot(ibd_coeff_mle,
-                      aes(x = k0,
-                          y = k1)) +
-               geom_point() +
-               theme_minimal() +
-               xlab("K0") +
-               ylab("K1")
-
-## Reporting of kinship:
-#ggsave(file = "ibd_mle_plot.png",
-#       width = 10,
-#       height = 10)
-
 ## Identity by state:
 ibs <- snpgdsIBS(input_vcf_gds_genofile,
                  num.thread = 20,
+                 snp.id = snpset.id,
                  autosome.only = FALSE)
-## Order samples by population information:
-pop.idx <- order(pop_code)
-input_for_melt <- ibs$ibs
-input_for_melt_melted <- melt(input_for_melt)
-## Generate plot:
-plot <- ggplot(data = input_for_melt_melted,
-               aes(x = Var1,
-                   y = Var2,
-                   fill = value)) +
-              geom_tile()
 
-## Save plot:
-#ggsave("correlation_plot_IBS.png",
-#       width = 10,
-#       height = 10)
+## Order samples by population information:
+input_for_melt <- as.data.frame(ibs$ibs)
+colnames(input_for_melt) <- tab$sample.id
+rownames(input_for_melt) <- tab$sample.id
+input_for_melt$sample <- tab$sample.id
+input_for_melt_melted <- melt(input_for_melt)
+
+colnames(input_for_melt_melted) <- tab$sample.id
+rownames(input_for_melt_melted) <- tab$sample.id
+
+input_for_melt_melted$sample <- factor(input_for_melt_melted$sample,
+                                          levels = unique(input_for_melt_melted$variable))
+
+## Generate plot:
+ibs_plot <- ggplot(data = input_for_melt_melted,
+                   aes(x = sample,
+                       y = variable,
+                       fill = value)) +
+    xlab("Samples") +
+    ylab("Samples") +
+    geom_tile(colour = "black") +
+    theme(axis.text.x = element_text(angle = 90,
+                                     hjust = 1),
+          axis.title = element_text(size = 15,
+                                    face = "bold")) +
+    scale_fill_gradient("r-value",
+                        low = "orange",
+                        high = "black",
+                        breaks = c(0.7,
+                                   0.8,
+                                   0.9,
+                                   1),
+                        labels = c("0.7",
+                                   "0.8",
+                                   "0.9",
+                                   "1"),
+                        limits = c(0.7,
+                                   1)) +
+    theme(axis.title = element_blank(),
+          legend.position = "top")
+
+## Read in results from ADMIXTURE:
+cv_error_rates <- read.table(file = "results/cv_error_rate.txt",
+                             header = FALSE)
+
+## Add column names:
+cv_error_rates$V1 <- NULL
+cv_error_rates$V2 <- NULL
+cv_error_rates$V3 <- gsub(pattern = "[(]K=",
+                          replacement = "",
+                          cv_error_rates$V3)
+
+cv_error_rates$V3 <- gsub(pattern = "[)]",
+                          replacement = "",
+                          cv_error_rates$V3)
+
+## 
+colnames(cv_error_rates) <- c("K",
+                              "CV_error_rate")
+
+## Reorder:
+str(cv_error_rates)
+cv_error_rates$K <- as.numeric(cv_error_rates$K)
+cv_error_rates_ordered <- cv_error_rates[order(cv_error_rates$K),]
+
+## Generate plot:
+cv_error_plot <- ggplot(data = cv_error_rates_ordered,
+                        aes(x = K,
+                            y = CV_error_rate)) +
+    geom_point() +
+    xlab(expression(italic("K"))) +
+    ylab(label = "Cross validation error") +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold",
+                                    size = 12))
+
+## Read in estimated likelihoods per K:
+likelihood_rates <- read.table(file = "results/likelihood_rate.txt",
+                             header = FALSE)
+
+## Format:
+likelihood_rates$V1 <- gsub(pattern = "[.]out:Loglikelihood:",
+                            replacement = "",
+                            likelihood_rates$V1)
+
+likelihood_rates$V1 <- gsub(pattern = "log",
+                            replacement = "",
+                            likelihood_rates$V1)
+
+colnames(likelihood_rates) <- c("K",
+                                "Estimated_likelihood")
+
+likelihood_rates$K <- as.numeric(likelihood_rates$K)
+likelihood_rates_ordered <- likelihood_rates[order(likelihood_rates$K),]
+
+likelihood_rates_plot <- ggplot(data = likelihood_rates_ordered,
+                        aes(x = K,
+                            y = Estimated_likelihood)) +
+    geom_point() +
+    xlab(expression(italic("K"))) +
+    ylab(label = "Estimated loglikelihood") +
+    theme_bw() +
+    theme(axis.title = element_text(face = "bold",
+                                    size = 12))
+
+
+## Combine plot:
+ggarrange(pca_plot,
+          ibs_plot,
+          cv_error_plot,
+          likelihood_rates_plot,
+          ncol = 2,
+          nrow = 2,
+          align = "hv",
+          labels = c("A",
+                     "B",
+                     "C",
+                     "D"))
 
 ## Save object:
-save.image(file = paste("results/",
-                        output,
-                        "_",
-                        slide_max,
-                        "_",
-                        slide_snp,
-                        "_",
-                        ld_threshold,
-                        "_pca_plots.Rdata",
-                        sep = ""))
+ggsave(filename = "results/supplemental_information_figure.pdf",
+       height = 10,
+       width = 10,
+       dpi = 600)
