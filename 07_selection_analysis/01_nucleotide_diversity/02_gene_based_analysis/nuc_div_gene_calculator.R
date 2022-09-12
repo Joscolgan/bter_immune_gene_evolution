@@ -1,9 +1,9 @@
 #!/usr/bin/env Rscript
 ##########################################################################################
 ##
-## Author: Joe Colgan                           Program: theta_estimator.R
+## Author: Joe Colgan (joscolgan)                      Program: nuc_div_gene_calculator.R
 ##
-## Date: 23-03-2020
+## Date: 30-04-2020
 ##
 ## Purpose:
 ##  - Read in text file containing information of VCF file for each chromosome, as well
@@ -39,16 +39,15 @@ for (lib in libraries) {
     }
 }
 
-options(scipen=999)
-
-#install.packages("WhopGenome")
+## Turn off scientific notations:
+options(scipen = 999)
 
 ## Load data
 ## Read in the tabix indexed VCF
 ## The input parameters include:
 ## 1) Tabix-indexed bgzipped file
 ## 2) numcols: number of SNPs that should be read in as a chunk
-## 3) tid: The ID of the chromosome e.g. "NC_015764.1"
+## 3) tid: The ID of the chromosome
 ## 4) Frompos: From position e.g. 1
 ## 5) topos: End positon (probably length of chromosome)
 ## An additional parameter is to include a gff
@@ -57,8 +56,7 @@ options(scipen=999)
 chrom_data <- read.table(input, header = FALSE)
 chrom_data <- as.matrix(chrom_data)
 
-## Divide each chromosome into sliding windows (window size: 10kb, jump size:5kb)
-##
+## Divide each chromosome into sliding windows (window size: 10kb, jump size:5kb): 
 count <- 0
 nucdiv_combined_df <- data.frame()
 
@@ -84,13 +82,9 @@ for (item in 1:nrow(chrom_data)){
                                    gffpath = input_gff,
                                    approx = FALSE,
                                    include.unknown = TRUE)
-        ## Set populations
-        #chrom_data_item <- set.populations(chrom_data_item, list(pop1, pop2))
-        ## Diversities and FST (by scaffold)
-        # chrom_data_item <- F_ST.stats(chrom_data_item) # this does the calculations and 
         ## Adds the results to the appropriate slots
         chrom_data_item <- splitting.data(chrom_data_item,
-                                          subsites="gene")
+                                          subsites = "gene")
         chrom_data_item <- diversity.stats(chrom_data_item)
         print(chrom_data_item@region.names)
         # Extract region names, which contains window coordinates:
@@ -119,29 +113,19 @@ for (item in 1:nrow(chrom_data)){
         print(head(nucdiv_item.df))
         nucdiv_item.df$chrom <- chrom
         nucdiv_item.df$tajima_d <- chrom_data_item@Tajima.D
-        ## Set populations
-        #chrom_data_item <- set.populations(chrom_data_item,
-        #                                   list(pop1, pop2))
-        ## Estimate fst:
-        #chrom_data_item <- F_ST.stats(chrom_data_item)
-        #nucdiv_item.df$fst <- get.F_ST(chrom_data_item)
-        ## Subset information on the number of segregating sites:
-        #nucdiv_item.df$seg_sites <- chrom_data_item@n.segregating.sites
         ## Add gene length:
         nucdiv_item.df$gene_length <- gene_length
         ## Adjust nucleotide diversity by gene length:
         nucdiv_item.df$test <- as.numeric(nucdiv_item.df$nuc_diversity) / nucdiv_item.df$gene_length
         ## Combine nucleotide diversity statistics across windows:
-        nucdiv_combined_df <- rbind(nucdiv_combined_df, nucdiv_item.df)
+        nucdiv_combined_df <- rbind(nucdiv_combined_df,
+                                    nucdiv_item.df)
 }
 
 print("Complete")
 dim(nucdiv_combined_df)
 
 print(head(nucdiv_combined_df))
-
-## Rearrange order:
-#nucdiv_combined_df <- nucdiv_combined_df[c(4,2,3,1,5,6,7)]
 
 ## Calcule median nucletide diversity
 nucdiv_median <- median(as.numeric(as.character(nucdiv_combined_df$nuc_diversity)))
