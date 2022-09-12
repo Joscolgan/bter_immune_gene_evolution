@@ -8,7 +8,7 @@
 #############################################################################################
 ## Author: Sarah Larragy, Joe Colgan (joscolgan)             Program: run_vcf_to_admixture.sh
 ##
-## Date: 28/06/22
+## Date: 15/04/2022
 ##
 ## Introduction:
 ## The purpose of this script is to take freebayes-called and vcftools-filtered variant
@@ -26,4 +26,4 @@ output=$3
 vcftools --vcf "$vcf" \
 --positions "$positions" \
 --recode \
---out "$output"
+--out "$output". 
