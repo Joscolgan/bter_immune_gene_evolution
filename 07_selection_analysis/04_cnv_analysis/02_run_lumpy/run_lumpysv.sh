@@ -5,6 +5,8 @@
 #SBATCH -A mulif005c
 #SBATCH -p ProdQ
 
+
+
 lumpyexpress -B \
 results_dtol/MU_01_FDPL190630198-1a_HJL3TDSXX_L1_dtol_alignment.sorted,\
 results_dtol/MU_03_FDPL190630200-1a_HJL3TDSXX_L1_dtol_alignment.sorted,\
@@ -107,5 +109,5 @@ results_dtol/MU_43_FDPL190630238-1a_HJL3TDSXX_L1_dtol_alignment.splitters,\
 results_dtol/MU_44_FDPL190630239-1a_HJL3TDSXX_L1_dtol_alignment.splitters,\
 results_dtol/MU_45_FDPL190630240-1a_HJL3TDSXX_L1_dtol_alignment.splitters,\
 results_dtol/MU_46_FDPL190630241-1a_HL272DSXX_L1_dtol_alignment.splitters \
--o test_dtol_irish.vcf \
+-o variant_calls_raw_dtol.vcf \
 -P
