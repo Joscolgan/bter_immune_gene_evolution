@@ -5,6 +5,20 @@
 #SBATCH -A mulif005c
 #SBATCH -p ProdQ
 
+################################################################################################
+##
+## Author: Sarah Larragy, Joe Colgan (joscolgan).                    Program: run_lumpysv.sh
+##
+## Date: 20-04-2022
+## 
+## Purpose:
+## This script takes for each sample:
+## - An alignment file in bam format sorted by position.   
+## These files are used by samtools and lumpysv to identify and produce subsetted alignment (bam)
+## files containing discordant and split reads, Each bam produced is then sorted by samtools.
+##
+################################################################################################
+
 for file in results_dtol/*bam;
 do 
 sample="$(echo $file |cut -d '/' -f 2 | cut -d '.' -f 1)";  
