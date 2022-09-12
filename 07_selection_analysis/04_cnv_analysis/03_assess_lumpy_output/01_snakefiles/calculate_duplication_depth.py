@@ -1,22 +1,26 @@
 #!/usr/bin/env python3
 ##############################################################################
-##############################################################################
-# Author: Joe Colgan                   Program: median_CNV_depth.py
-#
-# Date: 19/04/2016
-#
+## 
+## Author: Joe Colgan                   Program: calculate_duplication_depth.py
+##
+## Date: 15/06/2022
+##
+## Purpose:
+## This script takes an alignment BAM file per sample and intersects with multiple 
+## BED files containing the genomic positions of individual putative duplication events. 
+## The intersection process outputs individual BAM files containing reads aligned
+## to each putative duplication (bin). The number of aligned reads per BAM are 
+## calculated for each genomic base per individual. The median number of aligned reads
+## is calculated and output to a text file for loadiing into R.
+##
+## This script is a modification of a script previously published by Colgan et
+## al. (2022): https://doi.org/10.1093/molbev/msab366
+##
 ##############################################################################
 # Import modules
 import os.path
 
 from helper_functions import *
-
-# This script takes an alignment BAM file per sample and intersects with multiple BED files
-# containing the genomic positions of individual putative duplication events. 
-# The intersection process outputs individual BAM files containing reads aligned
-# to each putative duplication (bin). The number of aligned reads per BAM are calculated for
-# each genomic base per individual. The median number of aligned reads is calculated and output
-# to a text file for loadiing into R.
 
 # To achieve final output, the Snakefile contains custom-defined rules (see below) that
 # outline commands to execute sequentially to take custom-defined input(s) and generate
@@ -32,21 +36,17 @@ from helper_functions import *
 ##############################################################################
 # Sample information
 ##############################################################################
-# Bumblebee (Bombus terrestris) males were collected summer 2014
-# Each individual and site were assigned unique identifiers
-# Example: '2014_Bter_P_D_14_260_head'
-# Explanation:{year_collected}_{species}_{site_type}_{sex}_{site_number}_{tube_number}_{tissue_type}
-# species: Bter = Bombus terrestris
-# site_type: P = Pastoral, M = Mixed, A = Arable
-# sex: D = Male (drone)
+# Bumblebee (Bombus terrestris) males were collected summer 2018
+# Each individual was assigned a unique identifier:
+# Example: 'MU_01'
 
 ##############################################################################
 # Prior to use
 ##############################################################################
-# To run alignment_to_coverage.py:
+# To run calculate_depth.py:
 #  1. Download and install the following software:
 #   samtools
-#   bedtools2
+#   bedtools
 #
 #  2. Ensure helper_functions.py is within the same directory of the Snakefile.
 #
@@ -59,15 +59,15 @@ from helper_functions import *
 #
 #  6. Each rule willl take assigned input, global variables and generate defined outputs.
 #
-#  7. Input data should be formatted in the context of defined wildcards: {sample}.{pair}.fastq
-#      For example: 2014_Bter_P_D_14_260_head.R1.fastq
+#  7. Input data should be formatted in the context of defined wildcards: {samples}_RG_updated.bam
+#      For example: MU_01_RG_updated.bam
 #
 # 8. Make a text.file called 'sample_list.txt' and put in same directory as Snakfile.
 #     Populate 'sample_list.txt' with names of samples to be analysed.
 #       For example:
-#       2014_Bter_P_D_14_260_head
-#       2014_Blap_P_D_21_412_thorax
-#       2014_Bpas_A_D_20_391_thorax
+#       MU_01
+#       MU_02
+#       MU_03
 #
 ##############################################################################
 # Assign global variables for use in rules (see below)
