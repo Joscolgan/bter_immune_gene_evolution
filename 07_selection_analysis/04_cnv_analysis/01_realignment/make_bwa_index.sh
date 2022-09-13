@@ -9,7 +9,7 @@
 ##
 ## Author: Sarah Larragy, Joe Colgan (joscolgan).                    Program: make_bwa_index.sh
 ##
-## Date: 20-04-2022
+## Date: 20/05/22
 ## 
 ## Purpose:
 ## This script takes a reference genome assembly in FASTA format from the command line and
