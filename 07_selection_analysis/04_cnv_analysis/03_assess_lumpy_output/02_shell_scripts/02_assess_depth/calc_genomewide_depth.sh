@@ -9,7 +9,7 @@
 ##
 ## Author: Sarah Larragy, Joe Colgan (joscolgan)       	Program: calc_genomewide_depth.sh
 ##
-## Date: 28-06-22
+## Date: 28/06/22
 ##
 ## Introduction:
 ## The purpose of this script is to take sorted alignment (bam) files as input and calculate
