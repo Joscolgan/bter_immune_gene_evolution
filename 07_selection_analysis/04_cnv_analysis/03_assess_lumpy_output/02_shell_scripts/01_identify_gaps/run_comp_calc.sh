@@ -9,7 +9,7 @@
 ##
 ## Author: Sarah Larragy, Joe Colgan (joscolgan)       	Program: run_comp_calc.sh
 ##
-## Date: 28-08-2022
+## Date: 28/06/22
 ##
 ## Introduction:
 ## This script takes two input files:
