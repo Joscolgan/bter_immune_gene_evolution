@@ -3,7 +3,7 @@
 ##
 ## Author: Joe Colgan (joscolgan).                          Program: run_zscore_analysis.R
 ##
-## Date: 20-04-2022
+## Date: 20/04/22
 ## 
 ## Purpose:
 ## The purpose of this script is to identify genomic regions of significantly reduced nucleotie diversity,
