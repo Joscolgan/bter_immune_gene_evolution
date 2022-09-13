@@ -3,7 +3,7 @@
 ##
 ##  Author: Joe Colgan (joscolgan)                Program: median_counter.R
 ##
-## Date: 29/05/2022
+## Date: 29/05/22
 ##
 ## Purpose:
 ## The purpose of this script is to take the following as input from the 
