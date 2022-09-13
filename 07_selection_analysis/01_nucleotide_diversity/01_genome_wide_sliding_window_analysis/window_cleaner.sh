@@ -4,7 +4,7 @@
 ##
 ## Author: Joe Colgan (joscolgan).                          Program: window_cleaner.sh
 ##
-## Date: 20-04-2022
+## Date: 20/04/22
 ## 
 ## Purpose:
 ## A script to take a tab-delimited text file as input:
