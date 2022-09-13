@@ -3,7 +3,7 @@
 ##
 ## Author: Sarah Larragy, Joe Colgan (joscolgan)       	Program: prep_and_run_nsl.sh
 ##
-## Date: 28-06-22
+## Date: 28/04/22
 ##
 ## Introduction:
 ## The purpose of this script is to prepare input files for selscan to perform 
