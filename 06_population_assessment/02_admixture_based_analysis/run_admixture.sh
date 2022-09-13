@@ -9,7 +9,7 @@
 ## 
 ## Author: Sarah Larragy, Joe Colgan (joscolgan)             Program: run_admixture.sh
 ##
-## Date: 16/04/2022
+## Date: 16/04/22
 ##
 ## Introduction:
 ## The purpose of this script is to take a plink.bed file generated from a filtered VCF
