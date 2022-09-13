@@ -3,7 +3,7 @@
 ## 
 ## Author: Joe Colgan                   Program: calculate_duplication_depth.py
 ##
-## Date: 15/06/2022
+## Date: 15/06/22
 ##
 ## Purpose:
 ## This script takes an alignment BAM file per sample and intersects with multiple 
