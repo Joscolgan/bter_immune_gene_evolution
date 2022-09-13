@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 ##############################################################################
 ## 
-## Author: Joe Colgan                   Program: calculate_depth.py
+## Author: Joe Colgan (joscolgan)                 Program: calculate_depth.py
 ##
-## Date: 15/06/2022
+## Date: 15/06/22
 ##
 ## Purpose:
 ## This script takes an alignment BAM file per sample and intersects with multiple 
