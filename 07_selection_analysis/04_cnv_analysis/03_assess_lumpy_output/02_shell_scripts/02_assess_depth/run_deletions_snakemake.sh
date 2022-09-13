@@ -9,7 +9,7 @@
 ##
 ## Author: Sarah Larragy, Joe Colgan (joscolgan)       	Program: run_deletions_snakemake.sh
 ##
-## Date: 28-06-22
+## Date: 28/06/22
 ##
 ## Introduction:
 ## The purpose of this script is to call a snakefile to estimate read depth for putative
