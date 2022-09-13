@@ -3,7 +3,7 @@
 ##
 ## Author: Joe Colgan                   Program: helper_functions.py
 ##
-## Date: 24/05/2022
+## Date: 24/05/22
 ##
 ## Purpose:
 ## This script contains custom defined functions to:
