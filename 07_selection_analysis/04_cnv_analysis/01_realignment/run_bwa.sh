@@ -9,7 +9,7 @@
 ##
 ## Author: Sarah Larragy, Joe Colgan (joscolgan).                    Program: run_bwa.sh
 ##
-## Date: 20-04-2022
+## Date: 20/05/22
 ## 
 ## Purpose:
 ## This script takes compressed fastq files (two per sample; pairs) and aligns against an 
