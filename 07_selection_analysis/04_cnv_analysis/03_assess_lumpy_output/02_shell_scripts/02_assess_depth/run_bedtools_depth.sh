@@ -9,7 +9,7 @@
 ##
 ## Author: Sarah Larragy, Joe Colgan (joscolgan)       	Program: run_bedtools_depth.sh
 ##
-## Date: 28-06-22
+## Date: 28/06/22
 ##
 ## Introduction:
 ## The purpose of this script is to calculate read depth for putative copy number variation.
