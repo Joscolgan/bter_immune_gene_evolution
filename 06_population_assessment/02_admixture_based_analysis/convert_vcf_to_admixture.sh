@@ -9,7 +9,7 @@
 ## 
 ## Author: Sarah Larragy, Joe Colgan (joscolgan)         Program: convert_vcf_to_admixture.sh
 ##
-## Date: 15/04/2022
+## Date: 15/04/22
 ##
 ## Introduction:
 ## The purpose of this script is to take freebayes-called and vcftools-filtered variant
