@@ -9,7 +9,7 @@
 ##
 ## Author: Sarah Larragy, Joe Colgan (joscolgan).                    Program: run_lumpysv.sh
 ##
-## Date: 20-04-2022
+## Date: 22/05/22
 ## 
 ## Purpose:
 ## This script takes for each sample:
