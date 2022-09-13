@@ -3,7 +3,7 @@
 ##
 ## Author: Joe Colgan (joscolgan)                      Program: nuc_div_gene_calculator.R
 ##
-## Date: 30-04-2020
+## Date: 30/04/22
 ##
 ## Purpose:
 ##  - Read in text file containing information of VCF file for each chromosome, as well
