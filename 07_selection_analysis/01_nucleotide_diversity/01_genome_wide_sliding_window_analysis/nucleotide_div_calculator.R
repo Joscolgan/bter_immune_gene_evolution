@@ -3,7 +3,7 @@
 ##
 ## Author: Joe Colgan (joscolgan)                    Program: nucleotide_div_calculator.R
 ##
-## Date: 20-04-2022
+## Date: 20/04/22
 ##
 ## Purpose:
 ##  - Read in text file containing information of VCF file for each chromosome, as well
