@@ -10,4 +10,4 @@ Signatures of adaptation, constraints, and potential redundancy in the canonical
 
 This work is distributed under the [GPLv3 license](LICENSE). Reuse of code derived from this repository is permitted under two conditions: 
 1) Proper attribution (i.e., citation of the associated publication; see [CITATION.cff](CITATION.cff) and above).
-2) Publication of reused scripts on an open-access platform, such as Github.r
+2) Publication of reused scripts on an open-access platform, such as Github.
