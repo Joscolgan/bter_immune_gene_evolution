@@ -208,7 +208,7 @@ rownames(random_counts) <- "genome"
 
 #colnames(random_counts) <- new_names
 random_counts_sub <- random_counts[,intersect(colnames(random_counts),
-                        samples_of_interest)]
+                                              samples_of_interest)]
 
 # Remove the 'length' column from the deletions dataframe and replace with 'SV' status of duplication
 duplications$status     <- c("duplication")
@@ -217,8 +217,8 @@ random_counts$status    <- c("random")
 combined_counts <- rbind(duplications,
                          random_counts)
 ## Normalise experimental dataset using number of reads aligned to reference genome (ie. library size)
-combined_counts_normalized <- combined_counts[, 1:33]
-for (sample in colnames(combined_counts[, 1:33])) {
+combined_counts_normalized <- combined_counts[, samples_of_interest]
+for (sample in colnames(combined_counts[, samples_of_interest])) {
         combined_counts_normalized[[sample]] <- combined_counts_normalized[[sample]] / total_read_tranpose[[sample]]
 }
 
@@ -334,9 +334,10 @@ nrow(combined_counts_normalized_melt[which(combined_counts_normalized_melt$statu
 length(unique(potential_sig_dups$`rownames(combined_counts_normalized)`))
 ## 2) Number of duplications within samples per site:
 sort(table(potential_sig_dups$`rownames(combined_counts_normalized)`))
+table(sort(table(potential_sig_dups$`rownames(combined_counts_normalized)`)))
 ```
 
-## Step Nine: Identification of the number of sites per individual falling within duplicated regions:
+## Step Eight: Identification of the number of sites per individual falling within duplicated regions:
 
 ```{r}
 ## Subset the number of putatively duplicated sites with RD higher than 3 standard deviation from mean of randomly chosen sites.
@@ -364,7 +365,7 @@ colnames(combined_counts_normalized_melt) <- c("site",
                                                "normalised_read_depth")
 
 ## Identification of the number of sites with at least one individual that has a RD higher than 3 standard deviations:
-length(unique(high_read_depth$site)) #82 sites
+length(unique(high_read_depth$site)) #84 sites
 
 # Identification of samples per site
 # For example how many sites have high RD with five individuals at this site
@@ -432,7 +433,7 @@ write.table(x = high_read_counts_table_df,
             sep = "\t")
 ```
 
-## Step Ten: Subset raw and normalised counts of duplicated sites:
+Subset raw and normalised counts of duplicated sites:
 
 ```{r, message = FALSE}
 ## Extract raw counts for duplicated sites:
