@@ -16,7 +16,7 @@
 ## depth (base coverage) for each site in the genomes of wild-sampled bumblebees. 
 ## For each sample, the script outputs a tab-delimited text file containing the physical
 ## location of the base (Chromosome, base position) and the corresponding depth (i.e., how
-## many reads cover a particular site in the genome.
+## many reads cover a particular site in the genome).
 ##
 #############################################################################################
 
