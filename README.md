@@ -4,7 +4,7 @@ This repository contains all scripts used for the population genomic analysis of
 Findings are reported in the following manuscript: 
 
 __Larragy, S.J., Möllmann, J.S., Stout, J., Carolan, J.C., Colgan, T.J.__  
-Signatures of adaptation, constraints, and potential redundancy in the canonical immune genes of a key pollinator. _Genome Biology & Evolution_ (in press). 
+[Signatures of adaptation, constraints, and potential redundancy in the canonical immune genes of a key pollinator.](https://academic.oup.com/gbe/article/15/4/evad039/7115875) _Genome Biology & Evolution_ (2023). 
 
 ## License
 
