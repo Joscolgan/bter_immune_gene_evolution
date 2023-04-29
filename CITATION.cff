@@ -1,0 +1,12 @@
+cff-version: 1.0.3
+message: If you use this software, please cite it as below.
+authors:
+  - family-names: Larragy; Möllmann; Stout; Carolan; Colgan
+    given-names: Sarah J.; Jannik S.; Jane; James C.; Thomas J.
+    orcid: (Thomas Colgan) https://orcid.org/0000-0002-0547-8228
+title: Signatures of adaptation, constraints, and potential redundancy in the canonical immune genes of a key pollinator.
+journal: Genome Biology & Evolution
+doi: https://academic.oup.com/gbe/article/15/4/evad039/7115875. 
+date-released: 2023-04-12
+license: GPLv3
+repository: https://github.com/Joscolgan/bter_immune_gene_evolution
